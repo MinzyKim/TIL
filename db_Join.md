@@ -24,6 +24,7 @@
   - Not null
   - Unique
 - Foreign Key (외래키)
+  
   - RDBMS 참조관계 (parent Table의 PK를 참조하는 child 테이블의 외래키 설정)
 - Null 정의
   - 값이 할당되지 않음을 의미
@@ -194,6 +195,33 @@
                 		
   from emp;
   ```
+  
+  - 문>  전체 사원수, 1995, 1996, 1997, 1998년도에 입사한 사원수를 출력하시오
+  
+    컬럼 타이틀은 total,  1995, 1996, 1997, 1998 로 출력하시오
+  
+    ```sql
+    select distinct count(employee_id) as total, count(case when hire_date like('95%') then 1 end)"1995", 
+    count(case when hire_date like('96%') then 1 end)"1996",count(case when hire_date like('97%') then 1 end)"1997",
+    count(case when hire_date like('98%') then 1 end)"1998"                                           
+    from employees;
+    ```
+  
+  - 문> 직무별로 월급의 합계와   각 부서내에 직무별 월급의 합계를 아래
+    보기와 같이 출력하시오   컬럼
+    타이틀은 Job, Dept 20, Dept 50, Dept 80, Dept 90로 출력하시오
+  
+    ```sql
+    select job_id"Job", sum(case when DEPARTMENT_ID=20 then salary  end)"Dept 20",
+                    sum(case when DEPARTMENT_ID=50 then salary end)"Dept 50",
+                    sum(case when DEPARTMENT_ID=80 then salary end)"Dept 80",
+                    sum(case when DEPARTMENT_ID=90 then salary end)"Dept 90",
+                    sum(salary)"Total"
+    from employees
+    group by job_id;
+    ```
+  
+    
 
 ### 1.2.3 그룹함수
 
@@ -424,7 +452,7 @@ join locations c on b.location_id = c.location_id;
   select a.empno, a.ename, a.deptno, b.dname
   from emp a, dept b
   where a.deptno = b.deptno(+); ----8000번 hong사원 포함?
-    ```
+  ```
 
 - ##### Left-Outer Join
 
