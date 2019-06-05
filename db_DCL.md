@@ -550,3 +550,193 @@ from emp;
   Foreign Key
 
   check
+
+  ```sql
+  create table userinfo
+  (userid varchar2(10) not null,
+   username varchar2(15) constraint userinfo_nn not null,
+  age number(30)
+  );
+  
+  desc userinfo
+  insert into userinfo
+  values ('tester1', '테스터1', 20);
+  
+  insert into userinfo (username, age)
+  values ('테스터1', 20); --null값을 허용하지 않는데, null값
+  						--not null 제약조건 에러
+          
+  select * from userinfo;
+  
+  select constraint_name, constraint_type
+  from user_constraints
+  where table_name = 'USERINFO';
+  
+  alter table userinfo disable constraint userinfo_nn;
+  
+  insert into userinfo (userid, age)
+  values ('tester2', 30);
+  
+  select * from userinfo;
+  
+  drop table userinfo ;
+  desc userinfo;
+  
+  select constraint_name, constraint_type
+  from user_constraints
+  where table_name = 'USERINFO';
+  
+  select * from recyclebin;
+  
+  flashback table userinfo to before drop;
+  select * from userinfo;
+  select constraint_name, constraint_type
+  from user_constraints
+  where table_name = 'USERINFO';
+  
+  drop table userinfo purge;
+  ```
+
+  =========================================================
+
+  ```sql
+  * Unique 제약조건
+  
+  create table userinfo 
+  (userid  varchar2(10)  constraint userinfo_uk  unique,
+   username  varchar2(15)  ,
+   age  number(30)
+  );
+  
+  desc userinfo
+  insert into userinfo 
+  values ('tester1', '테스터1', 20);
+  
+  insert into userinfo  (username, age)
+  values ( '테스터2', 25);   --userid에 null? 허용
+  
+  insert into userinfo  (username, age)
+  values ( '테스터3', 30);   --userid에 null? 허용
+  
+  insert into userinfo
+  values ('tester1', '테스터5', 35);   --중복값 허용X error
+  
+  select * from userinfo;
+  
+  select constraint_name, constraint_type
+  from user_constraints
+  where table_name = 'USERINFO';
+  
+  select index_name, uniqueness
+  from user_indexs
+  where table_name = 'USERINFO';
+  
+  --oracle server는 unique제약조건이 선언된 컬럼에 자동으로 unique index 생성
+  
+  alter table userinfo disable constraint userinfo_uk;
+  
+  select index_name, uniqueness
+  from user_indexs
+  where table_name = 'USERINFO';
+  --제약조건 비활성화하면 인덱스 자동 삭제
+  alter table userinfo enable constraint userinfo_uk;
+  
+  select index_name, uniqueness
+  from user_indexes
+  where table_name = 'USERINFO';
+  --index 다시 자동 생성
+  
+  ```
+
+  =========================================================
+
+  ```sql
+  * Primary Key 제약조건
+  
+  #primary key = not null+unique
+  # 다른 제약조건은 하나의 테이블에 여러개 선언가능하지만
+  primary key 제약조건은 하나만 선언 가능
+  
+  create table userinfo 
+  (userid  varchar2(10)  constraint userinfo_pk primary key,
+   username  varchar2(15)  ,
+   age  number(30)
+  );
+  
+  desc userinfo
+  insert into userinfo 
+  values ('tester1', '테스터1', 20);  ---?
+  
+  insert into userinfo  (username, age)
+  values ( '테스터2', 25);     ---? error
+  
+  insert into userinfo 
+  values ('tester1', '테스터5', 35); ---? error
+  
+  select * from userinfo;
+  
+  select constraint_name, constraint_type
+  from user_constraints
+  where table_name = 'USERINFO';
+  
+  select index_name, uniqueness
+  from user_indexes
+  where table_name = 'USERINFO';
+  ```
+
+  =========================================================
+
+  ```sql
+  *check 제약조건
+  
+  create table userinfo(
+  userid  varchar2(10),
+  username  varchar2(15),
+  gender   char(1) constraint userinfo_ck  check (gender in ('F', 'M')),
+  age  number(2) check (age > 0 and age < 100)
+  );
+  
+  select constraint_name, constraint_type, search_condition
+  from user_constraints
+  where table_name='USERINFO';
+  
+  insert into userinfo  values ('a001', 'an', 'f', 20);  
+  --error 컬럼값은 대소문자 구분 함. gender 대소문자
+  insert into userinfo  values ('a001', 'an', 'w', 20); 
+  --error gender 대소문자
+  **insert into userinfo  values ('a001', 'an', null, 20);   --정상
+  insert into userinfo  values ('a002', 'choi', 'M', 0);
+  --error age범위 0보다 커야함
+  insert into userinfo  values ('a002', 'choi', 'M', 100);
+  --error age범위 100보다 작아야함
+  **insert into userinfo  values ('a002', 'choi', 'M', 25);  --정상
+  
+  drop table user_info purge;
+  ```
+
+  
+
+- **데이터 복구**
+
+  ```sql
+  
+  create table copy_dept
+  as select * from dept;
+  desc copy_dept
+  select * from copy_dept;
+  
+  drop table copy_dept;
+  desc copy_dept
+  select * from copy_dept;
+  select tname from tab;  ---BIN$~~~~~~~이름의 테이블
+  select * from user_recyclebins;
+  select * from  recyclebin ;
+  select * from "BIN$~~~~~~~";
+  
+  flashback table copy_dept to before drop;
+  select * from  recyclebin ;
+  select tname from tab;
+  desc copy_dept
+  select * from copy_dept;
+  
+  ```
