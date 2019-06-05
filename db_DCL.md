@@ -1,0 +1,283 @@
+# DAY 15
+
+*<지난 시간 복습>*
+
+## 0. SubQuery
+
+- select문 내부에 정의 된 select문(inner query, nested query)
+- outer query, main query
+- 2번 이상 select를 수행해서 결과 집합을 생성해야 할 때, 하나의 select문으로 정의해서 실행시킴
+
+
+
+- single row subquery - scalar subquery
+- multiple row subquery - multiple column subquery
+
+
+
+- subquery가 main query보다 먼저 수행하고, 1번 수행
+- co-related subquery(상관관계 subquery) - subquery가 main query의 행수만큼 subquery가 반복적으로 수행하는 Query
+
+
+
+- subquery가 올 수 있는 위치
+  - select절
+  - from절 --inline view
+  - where절 --연산자 오른쪽 (subquery)
+  - having절 --연산자 오른쪽 (subquery)
+  - order by절
+
+- subquery를 where절이나 having절에 정의할 때 sigle row operator(>, >=, <, <=, !=, <>)
+- multiple row operator(in, any>, any<, all<, all>)
+
+
+
+- subquery에는 모든 select절, 함수등 제약없이 사용 가능하지만,
+
+  order by절은 from절의 inline view에서만 허용됨
+
+
+
+- rownum - 결과행에 순차적인 번호를 발행 내장 컬럼
+  - 메모리에서 결과집합 만들어놓고, order by전에 발생됨
+  - order by후에 rownum을 순차적인 번호를 발행하려면 subquery를 사용해야 함
+
+
+
+- *co-related subquery(상관관계 subquery) 
+
+```sql
+select~~
+from table a
+where column 연산자 (select ~
+                 from table2
+                 where a.column = column2) -- 후보 row를 가져와서 subquery수행 후 반복
+```
+
+*co-related subquery에서 존재 유무를 체크해주는 연산자 - exists, not exists
+
+
+
+- *긴 query문에서 반복적으로 사용하는 subquery를 먼저 정의해서 재사용하려면
+
+```sql
+with
+별칭 as (subquery),
+별칭 as (subquery),
+별칭 as (subquery),
+...
+별칭 as (subquery)
+select ~
+from ~
+where ~
+```
+
+
+
+- set operator - 서로 다른 select의 결과를 단일 결과집합으로 만들기 위해 쓰는 연산자
+  - 합집합 - union, union all
+    - union : 각 select의 결과 행에서 중복된 행을 제외하기 위해 sorting
+    - union all : append방식 
+  - 교집합 - intersect
+    - intersect : 각 select의 결과 행에서 중복된 행만 결과로 생성하기 위해 sorting비교
+  - 차집합 - minus
+    - minus : 첫번째 select의 결과에만 속한 행을 선택하기 위해 sorting비교
+
+```sql
+select ~
+from ~
+[where ~]
+[group by ~]
+[having]
+
+union | union all | intersect | minus
+
+select ~
+from ~
+[where ~]
+[group by ~]
+[having]
+```
+
+**각 select문에서 컬럼개수와 컬럼타입이 일치해야 함*
+
+**결과는 첫번째 컬럼값을 기준으로 정렬된 결과가 리턴되므로 다른 컬럼으로 정렬하려면 order by절은 마지막 select문에만 허용*
+
+​	 
+
+```sql
+문> 전체 사원의 급여 평균
+	부서별 사원의 급여 평균
+	부서와 직무별 사원의 급여 평균
+	
+select to_number(null), to_char(null), avg(sal)
+from emp
+union all
+select deptno, to_char(null), avg(sal)
+from emp
+group by deptno
+union all
+select to_number(null), job, avg(sal)
+from emp
+group by deptno, job
+union all
+select deptno, job, avg(sal)
+from emp
+group by deptno, job;
+```
+
+- set
+  - rollup으론 부족하고, cube로는 넘칠 때 사용한다. 효율이 rollup과 cube만큼 좋진 않지만 가끔 사용
+
+```sql
+select deptno, job, avg(sal)
+from emp
+group by cube (deptno, job);
+
+select deptno, job, mgr, avg(sal)
+from emp
+group by grouping sets ((deptno, mgr), (mgr), (job), ());
+```
+
+
+
+## 1. Insert
+
+- 새로운 데이터를 추가하려면 대상 테이블이 insert권한 또는 테이블의 소유자 
+
+  insert into 테이블명 (컬럼명, 컬럼명,...)
+
+  value (컬럼리스트의 순서대로 값...);
+
+  *새로 추가되는 행의 데이터로 일부 컬럼값만 정의할 경우, 필수 컬럼은 반드시 선언
+
+
+
+```sql
+insert into 테이블명
+values (테이블에 정의된 컬럼 순서대로 모든 값이 선언);
+
+insert into dept (dname, loc)
+values('IT', 'Seoul');
+```
+
+```sql
+insert into dept
+values(55,'ERP',null);
+
+insert into emp ( empno, ename, deptno, hiredate)
+values (9000,'Kim',50, sysdate); --단일값 함수 허용
+
+insert into emp ( empno, ename, deptno, hiredate)
+values (9001,'Lee',50, '19년3월2일'); --날짜 포맷 오류
+
+insert into emp ( empno, ename, deptno, hiredate)
+values (9001,'Lee',50, '19/03/02'); --to_date()함수 사용
+
+create table emp10
+as select * 
+    from emp
+    where 1=2; --테이블 구조만 복제, CTAS(Create as구분을 이용해서 복제)
+    
+select * from emp10;
+
+insert into emp10
+select * from emp where deptno=10;
+
+select * from emp10;
+--values 절 대신 subquery를 선언하면 subquery의 결과 행수만큼 추가
+
+insert into emp10 ( empno, ename, deptno, sal)
+select empno, job, hiredate, mgr
+from emp where deptno =20; --subquery에서 insert에 선언된 컬럼 개수나 타입과 일치하지 않으면 error
+```
+
+
+
+## 2. Update
+
+- 테이블에 이미 존재하는 행의 데이터를 수정할때 컬럼단위로 수정
+
+```sql
+update 테이블명
+set 컬럼명=new컬럼값 [, 컬럼명=new컬럼값, ...]; --테이블의 모든 데이터
+```
+
+```sql
+select empno, ename, deptno, sal from emp10;
+update emp10
+set sal = 1;
+select empno, ename, deptno, sal from emp10;
+rollback; -- 생성되고 난 이후 모든 변경사항 취소
+```
+
+```sql
+select empno, ename, deptno, sal
+from emp;
+
+update emp
+set sal =1
+where deptno = 30;
+```
+
+```sql
+update emp
+set sal = (select sal
+            from emp
+            where ename='KING')
+where ename='SMITH'; --update의 set절, update의 where절에도 subquery사용 가능
+
+```
+
+```sql
+create table customer (
+custid number(7),
+custname varchar2(15),
+point  number(5) defalut 1000
+);
+
+select * from customer;
+
+insert into customer (custid, custname)
+values (990301,'Kim')
+
+select * from customer;
+```
+
+```sql
+--테이블에 이미 저장되어 있는 레코드를 삭제하려면
+delete from 테이블명 ; -- 전체 행 삭제
+
+delete 테이블 명 ; --오라클에선 from절 생략 가능
+
+delete from 테이블명 where 조건 ; -- 조건을 만족하는 행만 삭제
+
+delete from 테이블명 where 컬럼 연산자 (subquery);
+
+select * from emp;
+delete from emp;
+select * from emp;
+```
+
+
+
+## 3. Merge
+
+- 운용계 DB 목적 : 트랜젝션 처리
+
+- insert, update, delete를 한 번에 수행 가능
+- 취소 할 땐 rollback 한번만 하면 됨
+- ETL작업에 많이 사용 된다.
+
+```sql
+merge into 대상테이블 t(allias)
+using 소스테이블 s
+on t.pk컬럼 = s.pk컬럼
+when matched then
+update set t.컬럼 = s.컬럼,.....
+[delete (from 테이블명 생략)  where 조건]
+when not matched then
+insert (t.컬럼리스트)
+values (s.컬럼, s.컬럼, ...);
+```
+
