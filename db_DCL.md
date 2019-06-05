@@ -281,3 +281,272 @@ insert (t.컬럼리스트)
 values (s.컬럼, s.컬럼, ...);
 ```
 
+
+
+## 4. Transaction
+
+- Unit of Work (분리되어 수행 될 수 있는 작업단위)
+- ACID - 원자성, 일관성, 격리성, 영속성
+- DB관점의 Transaction은 변경(DML, DDL, DCL)이 포함되면
+- select는 Transaction으로 포함되지 않고
+
+
+
+- Transaction 단위
+  - 1개 이상의 DML들로 구성 - 명시적 commit, rollback
+  - 1개의 DDL - auto commit;
+  - 1개의 DCL - auto commit;
+- 수행중인 DML 트랜잭션의 세션이 비정상종료하면 oracle server는 rollback한다.
+- 수행중인 DML 트랜잭션의 세션이 정상종료(exit;)하면 oracle server는 auto Commit한다.
+
+- 읽기 일관성 - select하는 user들이 변경중인 user 작업이 종료될때까지 기다리리지 않고,
+
+  변경 작업하려는 user들은 select하는 user들이 검색을 종료할때까지 기다리지 않고,
+
+  변경 작업중인 user들은 변경 중인 값을 조회 결과로 볼 수 있고, 변경 중이지 않은 user는 DB에 저장된(commit된) 데이터 값을 조회 결과로 볼 수 있도록 함
+
+- 오라클 서버는 읽기 일관성을 위해서 Lock, undo segment등을 지원함.
+
+
+
+## 5. Window Function
+
+ ### 	5.1 rank()
+
+: 특정 컬럼에 대한 순위를 구하는 함수로서 동일한 값에 대해서 동일한 순위를 가지며, 동일한 순위의 수만큼 다음 순위는 건너뛴다. 
+
+```sql
+select ename, job, rank() over (order by sal desc) sal_rank
+                               ,rank() over(partition by job order by sal desc) job_rank
+from emp;
+```
+
+
+
+### 	5.2 dense_rank()
+
+: 특정 컬럼에 대한 순위를 구하는 함수로서 동일한 순위 다음의 순위는 동일 순위의 수와 상관없이 1 증가된 값을 돌려준다**.**
+
+```sql
+select ename, job, dense_rank() over (order by sal desc) sal_rank
+                               ,dense_rank() over(partition by job order by sal desc) job_rank
+from emp;
+```
+
+
+
+### 	5.3 Row_Numer()
+
+: 특정 컬럼에 대한 순위를 구하는 함수로서 동일한 값이라도 고유한 순위를 부여한다 (동일한 순위를 배제하기 위해 unique한 순위를 oracle의 경우 rowid가 적은 행이 먼저 나온다.)  PARTITION내의 ROW들에 순서대로 UNIQUE한 일련번호를 부여한다.
+
+```sql
+select  ename, job, sal, 
+        dense_rank( ) over ( order by sal desc ) sal_rank
+        ,  rank( ) over ( order by sal desc ) sal_rank2
+        ,  row_number( ) over ( order by sal desc ) sal_rank2
+from emp; 
+```
+
+
+
+### 	5.4 집계함수 관련 window함수
+
+```sql
+문> emp 테이블에서 관리자로 파티셔닝된 사원이름, 오름차순 정렬된 급여 데이터 누적 합 출력
+select  ename, mgr, sal, sum(sal) over (partition by mgr order by sal) 
+from emp;
+
+
+문> emp 테이블에서 관리자로 파티셔닝된 사원이름, 오름차순 정렬된 급여 데이터 누적 합 출력
+select  ename, mgr, sal, 
+        sum(sal) over (partition by mgr order by sal
+                       range  unbounded preceding) 
+from emp;
+```
+
+
+
+### 	5.5 **ROWS  BETWEEN 1 PRECEDING AND 1 FOLLOWING** 
+
+: 현재 행을 기준으로 파티션 내에서 앞의 한 건, 현재 행, 뒤의 한 건을 범위로 지정한다.
+
+```sql
+문> emp 테이블에서 관리자로 파티셔닝된 사원이름, 오름차순 정렬된 급여 데이터의 행 기준 누적 합 출력
+select  ename, mgr, sal, 
+        sum(sal) over (partition by mgr order by sal
+                       rows between unbounded preceding and current row   ) 
+from emp;
+
+
+문> emp 테이블에서 관리자로 파티셔닝된 사원이름, 오름차순 정렬된 급여 데이터의 행 기준으로 현재행의 앞에 한행, 뒤에 한 행의 누적 합 출력
+select  ename, mgr, sal, 
+        sum(sal) over (partition by mgr order by sal
+                       rows between 1 preceding and 1 following   ) 
+from emp;
+```
+
+
+
+### 	5.6 RANGE  BETWEEN 50 PRECEDING AND 150 FOLLOWING 
+
+: 현재 행을 기준으로 급여가 -50에서 +150의 범위 내에 포함된 모든 행이 대상이 된다.(RANGE는 현재 행의 데이터 값을 기준으로 앞뒤 데이터 값의 범위를 표시)
+
+```sql
+문> emp 테이블에서 관리자로 파티셔닝된 사원이름, 오름차순 정렬된 급여 데이터의 행 기준으로 급여의 -200~+200 범위의 급여자 수 출력
+select  ename, mgr, sal, 
+        count(sal) over (order by sal
+                         range between 200 preceding and 200 following   ) 
+from emp;
+```
+
+
+
+### 	5.7 그룹 내 행 순서 함수
+
+- FIRST_VALUE 와 LAST_VALUE
+
+  - FIRST_VALUE 
+
+    : 파티션별 윈도우에서 가장 먼저 나온 값을 구한다. 
+    다른 함수와 달리 공공 등수를 인정하지 않고 처음 나온 행만을 처리한다.
+    PARTION BY에 의해 분류된 범위 내에서 ORDER BY 에 의해 정렬을 한 후 ROWS 또는 RANGE에 의해 범위가 지정되면 그 중 제일 앞에 위치하는 ROW의 값들을 읽어 올때 사용
+
+  - LAST_VALUE
+
+    : 파티션별 윈도우에서 가장 나중에 나온 값을 구한다. 
+     다른 함수와 달리 공공 등수를 인정하지 않고 가장 나중에 나온 행만을 처리한다.
+     PARTION BY에 의해 분류된 범위 내에서 ORDER BY 에 의해 정렬을 한후 ROWS 또는 RANGE에 의해 범위가 지정되면 그 중 제일 뒤에 위치하는 ROW의 값들을 읽어 올때 사용
+
+    **FIRST_VALUE**와 **LAST_VALUE**는 정렬된 **ROW의 순서**에 의해 값이 결정된다.
+
+  ```sql
+  select  ename, mgr, sal, 
+          first_value(sal) over (partition by mgr order by sal ) ,
+          last_value(sal) over (partition by mgr order by sal ) 
+  from emp;
+  
+  
+  select  ename, mgr, sal, 
+          first_value(sal) over (partition by mgr order by sal ) ,
+          last_value(sal) over (partition by mgr order by sal 
+          range between current row and  unbounded following ) 
+  from emp; 
+  ```
+
+  
+
+- LAG 
+
+  - 파티션별 윈도우에서 이전 몇 번째 행의 값을 가져올 수 있다.
+
+  ```sql
+  select  ename, hiredate, sal, 
+          lag(sal) over (order by hiredate ) ,
+          lag(sal, 2, 0) over (order by hiredate ) 
+  from emp;
+  
+  ```
+
+- LEAD
+
+  - 파티션별 윈도우에서 이후 몇 번째 행의 값을 가져올 수 있다.
+
+  ```sql
+  select  ename, hiredate, sal, 
+          lead(sal) over (order by hiredate ) ,
+          lead(sal, 2, 0) over (order by hiredate ) 
+  from emp;
+  ```
+
+  
+
+## 6. 객체 종류
+
+- 테이블을 생성하려면 create table 시스템 권한이 있어야 한다.
+
+  tablespace (data container)저장소에 quota가 할당되어 있어야 한다.
+
+
+
+- **table 또는 컬럼 이름 규칙** : 
+  - 영문자 또는 _, $, #로 시작,
+  - 두번째 문자부터 숫자 허용
+  - 키워드 안됨
+
+- **schema** - 서로 연관된 table, index등의 객체를 그룹핑하는 논리적 개념
+
+  ​				객체 명을 재사용할 수 있는 namespace역할을 한다.
+
+  - shema내에서 중복된 이름 사용 불가
+  - 길이 제한 30자
+  - DB이름 길이 제한 8자
+
+- **컬럼타입**
+
+  - char 고정길이 문자열 ~2000byte
+  - varchar2 가변길이 문자열 ~4000byte
+  - number(p, s)
+  - date : 7byte값으로 numeric값을 저장
+    - _ _세기 _ _년 _ _월 _ _일 _ _시 _ _분 _ _초
+  - timestamp : date타입 확장, 1/10^9의 정밀한 초값 저장
+  - timestamp with timezone
+  - interval year to month
+  - interval day to second
+
+  - rowid
+  - CLOB(character large object) ~4G
+  - raw - binary 형식의 값 저장 예) 지문, 증명사진 ~2000byte
+  - BLOB(binary large object) ~4G
+  - BFILE - read only 가능한 file을 DB외부에 운영체제의 폴더에 저장, TX처리
+
+- ```sql
+  create table 테이블명 (
+  컬럼명 컬럼타입(size),
+  컬럼명 컬럼타입(size)  [default 값],
+  컬럼명 컬럼타입(size)  [제약조건],
+  .......
+  [제약조건]
+  )
+  [..................];
+  ```
+
+- 
+
+- **CTAS**(테이블 구조만 복제한다던가, 일부row만 가져오거나,...)
+
+  ```sql
+  create table 테이블이름
+  as
+  	(subquery);
+  	
+  create table emp20
+  as select empno, ename, deptno, sal*12
+  	from emp
+  	where deptno = 20; -- error
+  	
+  create table emp20
+  as select empno, ename, deptno, sal*12 salary
+  	from emp
+  	where deptno = 20; --allias 지정해주기
+  	
+  drop table emp20 purge;
+  	
+  create table emp20 (empid, name, deptid, salary)
+  as select empno, ename, deptno, sal*12
+  	from emp
+  	where deptno = 20; 
+  ```
+
+  
+
+- **제약조건 constraint - table의 DML 수행시 규칙**
+
+  Primary Key
+
+  not null
+
+  Unique Key
+
+  Foreign Key
+
+  check
