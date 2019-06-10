@@ -350,9 +350,9 @@ constraint emp2_pk  primary key (empno, ename) ---테이블 레벨
 alter table 테이블명 modify (컬럼 컬럼타입(크기) );
  ```
 
-- 컬럼 타입 변경할 때 컬럼값이 존재하더라도 char5 -> varchar2(10) 변경은 가능
-- 컬럼 타입 변경할 때 호환되지 않는 컬럼타입으로 변경할 때는 컬럼값을 null로 변경한 후에 컬럼타입을 변경할 수 있음
-- 컬럼 크기를 변경할 때 크기 증가는 항상 가능, 컬럼값이 존재할 때 컬럼 크기를 줄이려면 저장된 컬럼값의 최대 길이보다 작게 줄일 수 없음
+- 컬럼 타입 변경할 때 컬럼값이 존재하더라도 **char5 -> varchar2(10)** 변경은 가능
+- 컬럼 타입 변경할 때 호환되지 않는 컬럼타입으로 변경할 때는 컬럼값을 **null**로 변경한 후에 컬럼타입을 변경할 수 있음
+- 컬럼 크기를 변경할 때 크기 증가는 항상 가능, 컬럼값이 존재할 때 컬럼 크기를 줄이려면 저장된 컬럼값의 **최대 길이보다 작게 줄일 수 없음**
 
 
 
@@ -380,7 +380,143 @@ purge recyclebin;
 truncate table 테이블명[reuse storage]; -- 구조만 남겨두고, date는 완전 삭제(recyclebin에도, undo data도 남기지 않음)
 
 drop table ~ ; --table메타정보, data, 제약조건, index도 함께 삭제
+
+PK와 UK에 index 자동 생성 목적 - 정합성 체크, 중복값 체크를 빠르게 수행
 ```
 
 
 
+	### 	4.4 View
+
+- **정의** : 가상 테이블로, 하나 이상의 테이블을 조회하는 select문을 저장한 객체를 의미함
+  - **simple view** : 하나의 대상 테이블로부터 view 생성, not null 제약조건이 선언된 컬럼은 모두 포함, 컬럼표현식X, group by X, 그룹함수 X, rowid X, 
+  - **complex ciew** : 하나 이상의 테이블에 대한 select문으로 정의, 컬럼표현식 
+
+```sql
+create view 권한이 있어야 합니다.
+conn scott/oracle
+select * from session_privs; ----user_sys_privs
+
+create view emp20_vu
+as select empno, ename, deptno, job, sal*12
+   from emp
+   where deptno = 20; 
+
+
+con sys/oracle as sysdba
+grant create view to scott, hr;
+
+conn scott/oracle
+create view emp20_vu
+as select empno, ename, deptno, job, sal*12  
+   from emp
+   where deptno = 20; --error
+
+create view emp20_vu
+as select empno, ename, deptno, job, sal*12 salary
+   from emp
+   where deptno = 20;
+
+select text
+from user_views
+where view_name = 'EMP20_VU';
+
+create or replace view~~~~ => alter view 역할
+
+create or replace view dept_vu
+as select *
+   from dept10; ---error? base가 되는 dept10 테이블이 존재하지 않으므로 ..
+
+create or replace force view dept_vu
+as select *
+   from dept10;   ---?
+
+select object_name, object_type, status
+from user_objects
+where object_name = 'DEPT_VU';  --dept_vu는 생성되었으나 유효하지 않음
+
+
+select * from emp20_vu; ---뷰의 데이터 조회
+insert into emp20_vu values (9005, 'Song', 20, 'SALESMAN', 2000); -->error
+  
+
+
+create view emp20_vu
+as select empno, ename, deptno, job, sal
+   from emp
+   where deptno = 20; --? error
+
+
+create or replace view emp20_vu
+as select empno, ename, deptno, job, sal
+   from emp
+   where deptno = 20;
+
+insert into emp20_vu values (9005, 'Song', 20, 'SALESMAN', 2000);
+select * from emp20_vu;
+select empno, ename, deptno, job, sal
+   from emp
+   where deptno = 20;
+
+update emp20_vu set sal = 1900 where empno = 9005;
+select * from emp20_vu;
+select empno, ename, deptno, job, sal
+   from emp
+   where deptno = 20;
+
+delete from emp20_vu where empno = 9005;
+select * from emp20_vu;
+select empno, ename, deptno, job, sal
+   from emp
+   where deptno = 20;
+
+drop view emp20_vu;  --view객체 삭제, base 테이블에 영향을 주는지?
+select * from emp20_vu;
+select empno, ename, deptno, job, sal
+   from emp
+   where deptno = 20; 
+
+view객체 삭제는 테이블에 영향을 주지 않고, 메타 정보만 data dictionary로부터 제거됩니다.
+```
+
+### 	4.5 Sequence
+
+- 정의 : 특정 규칙에 맞는 연속 숫자를 생성하는 객체
+
+```sql
+create sequence emp_seq;
+select *
+from user_sequences;
+--시퀀스 객체를 생성하면 자동으로 시퀀스의 내장 컬럼 currval, nextval을 생성
+select emp_seq.currval
+from dual;  --시퀀스를 생성하면 최초값을 생성한 다음에 currval을 확인 가능
+
+select emp_seq.nextval
+from dual; 
+
+select emp_seq.currval
+from dual; 
+
+insert into emp (empno, ename)
+values (emp_seq.nextval , 'Kang');
+
+select empno, ename
+from emp;
+
+update dept
+set deptno = emp_seq.nextval
+where deptno = 50;
+
+select deptno, dname
+from dept;
+
+alter sequence 시퀀스명
+increment by ~
+maxvalue ~
+minvalue ~
+cycle ~
+cache~;
+
+drop sequence 시퀀스명 ;   --메타 정보만 data dictionary로부터 삭제됨
+
+```
