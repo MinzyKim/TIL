@@ -123,7 +123,7 @@ when not mathced then
 
 
 
-- 읽기 일관성 - 변경 중인 user는 자신이 변경중인 값이 조회되고, 변경중이지 않는 user들은 DB에 이전에 commit되서 저장된 값을 조회
+- **읽기 일관성** - 변경 중인 user는 자신이 변경중인 값이 조회되고, 변경중이지 않는 user들은 DB에 이전에 commit되서 저장된 값을 조회
   - Lock(변경 중인 유저가 사용)과 undo data(변경중이지 않은 유저데이터)를 이용해서 읽기 일관성  보장
   - undo data는 트랜잭션을 rollbavk을 하면 변경전값을 undo segment로부터 restore(복원) 해준다.
 
@@ -131,11 +131,11 @@ when not mathced then
 
 ### 	3.6 데이터베이스의 객체
 
-- table - 구조, 물리적 data (Record + Column)
+- **table** - 구조, 물리적 data (Record + Column)
 
    			heap, partition, IOT(Index organized Table), clustered, ...종류
 
-- view - table에 대해서 select로 정의된 table의 window역할
+- **view** - table에 대해서 select로 정의된 table의 window역할
 
   ​			보안, 간결한 select문 사용을 위해서 
 
@@ -143,7 +143,7 @@ when not mathced then
 
   ​			예외 ) MeterializedView - 성능향상이 목적인 물리적 data를 가지는 						View
 
-- index - 테이블의 컬럼에 생성
+- **index** - 테이블의 컬럼에 생성
 
   ​			where절에 검색조건으로 사용되는 컬럼, join 컬럼, order by 절의 컬럼
 
@@ -151,11 +151,11 @@ when not mathced then
 
   ​			b*tree구조로 저장
 
-- sequence - 순차적으로 숫자값이 저장되어야 하는 컬럼(주문번호, 게시판의 글번호등)의 값을 자동으로 발행해주는 객체
+- **sequence** - 순차적으로 숫자값이 저장되어야 하는 컬럼(주문번호, 게시판의 글번호등)의 값을 자동으로 발행해주는 객체
 
   ​					최소값, 최대값, 증감값 설정
 
-- synonym(동의어) - schema명, 객체@dblink명과 같은 객체이름을 간결하게 사용하기 위한 동의어
+- **synonym** - schema명, 객체@dblink명과 같은 객체이름을 간결하게 사용하기 위한 동의어
 
 
 
@@ -173,7 +173,7 @@ storage...];
 테이블 생성을 위해 필요한 권한 - create table, tablespace에 대한 quota가 할당되어 있어야 함
 ```
 
-- 테이블명, 컬럼명 이름규칙
+- **테이블명, 컬럼명 이름규칙**
 
   - 대소문자 구별 안함 - Data Dictionary에는 대문자로 저장됨
   - 첫문자로 영문자, _, $, # 허용
@@ -182,7 +182,7 @@ storage...];
   - 동일 schema내에서 같은 이름의 객체 안됨
   - 길이제한 30자 ( 데이터베이스이름 길이제한 8자 )
 
-- schema - 서로 연관된 객체들을 그룹핑, 오라클에서는 user명을 schema명으로 사용함
+- **schema** - 서로 연관된 객체들을 그룹핑, 오라클에서는 user명을 schema명으로 사용함
 
   ​				user소유의 객체들을 그룹핑해서 다른 user소유의 객체들을 구별하는 namespace역할을 하면서 동일한 이름의 객체를 다른 schema에서 사용가능
 
@@ -254,13 +254,13 @@ constraint emp2_pk  primary key (empno, ename) ---테이블 레벨
 );
 ```
 
-- 컬럼에 index가 자동 생성되는 제약조건 - primary key, unique key
+- **컬럼에 index가 자동 생성되는 제약조건** - primary key, unique key
   - 제약조건 메타 정보 조회 - user_constraints, dba_constraints
   - 테이블의 메타 정보 조회 - user_tables (tab), all_tables, dba_tables
   - 컬럼 메타 정보 조회 - desc 테이블명 / user_tab_columns
   - 인덱스 메타 정보  조회 - user_indexes, user_ind_columns
 
-- 제약조건 예
+- **제약조건 예**
 
   ```sql
   create table category (
@@ -481,7 +481,7 @@ view객체 삭제는 테이블에 영향을 주지 않고, 메타 정보만 data
 
 ### 	4.5 Sequence
 
-- 정의 : 특정 규칙에 맞는 연속 숫자를 생성하는 객체
+- **정의** : 특정 규칙에 맞는 연속 숫자를 생성하는 객체
 
 ```sql
 create sequence emp_seq;
@@ -520,3 +520,87 @@ cache~;
 drop sequence 시퀀스명 ;   --메타 정보만 data dictionary로부터 삭제됨
 
 ```
+
+### 	4.6 Synonym
+
+- **정의** : 테이블, 뷰, 시퀀스 등 객체 이름 대신 사용할 수 있는 다른 이름을 부여하는 객체
+
+- **Synonym 예제**
+
+  ```sql
+  create synonym e
+  for emp;
+  
+  select * from e;
+  --emp의 테이블이 검색됨
+  
+  drop synonym e;
+  
+  ** 현재 어떤 아이디로 접속해있는지 확인할 때
+  select user
+  from dual;
+  ```
+
+
+
+## 5. 사용자, 권한, 롤 관리
+
+### 	5.1 user관리
+
+- **사용자 생성**
+
+  ```sql
+  create user 사용자 이름
+  identified by 패스워드
+  ```
+
+  ### 5.2 권한 관리
+
+- **객체 권한**  - 예) table에서는 insert, update, select, alter, delete등을 수행
+
+   						view에는 select, drop, insert, update, delete
+
+  ​						sequence는 select, alter, drop
+
+  ​						객체의 소유자, DBA
+
+  ```sql
+  conn kim/oracle
+  select * from scott.emp;
+  
+  conn scott/oracle
+  grant select on emp to kim;
+  
+  conn kim/oracle
+  select * from scott.emp;
+  ```
+
+  ```sql
+  grant select on scott.emp  to hr;  --error
+  
+  conn scott/oracle
+  grant select on emp to kim with grant option;
+  
+   
+  conn kim/oracle
+  select * from scott.emp;
+  grant select on scott.emp  to hr;  ---?
+  
+  conn hr/oracle
+  select * from scott.emp; ---?
+  
+  conn scott/oracle
+  revoke select on emp from hr;  ---? error
+  --객체 권한은 직접 권한을 준 user가 회수 가능
+  
+  revoke select on emp from kim; -- 이건 가능
+  
+  conn hr/oracle
+  select * from scott.emp; ---?  객체권한은 cascade로 회수됨
+  
+  ```
+
+  ### 5.3 롤 관리
+
+- **정의** :  
+
