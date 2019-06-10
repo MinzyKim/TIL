@@ -23,7 +23,7 @@
 
 ## 3. DML
 
- ### 3.1 새데이터추가
+ ### 	3.1 새데이터추가
 
 ```sql
 insert into 테이블명 (컬럼명 리스트) values (컬럼명 리스트의 순서와 타입에 맞는 값);
@@ -47,7 +47,7 @@ insert into 테이블명 subquery;
 
 
 
-### 3.2 컬럼 값 변경
+### 	3.2 컬럼 값 변경
 
 ```sql
 update 테이블명 set 컬럼명=변경할 값 [, 컬럼명=변경할 값,...];
@@ -69,7 +69,7 @@ update 테이블명 set 컬럼명=(subquery) [, 컬럼명=변경할 값,...] whe
 
 
 
-### 3.3 테이블의 행 삭제
+### 	3.3 테이블의 행 삭제
 
 ```sql
 delete from 테이블명; -- 모든 행 삭제
@@ -93,7 +93,7 @@ delete from 테이블명 where (subquery);
 
 
 
-### 3.4 Merge문
+### 	3.4 Merge문
 
 - ETL작업에 사용되는 하나의 DML로 insert, update, delete수행
 
@@ -111,7 +111,7 @@ when not mathced then
 
 
 
-### 3.5 TCL(Transaction Control Language)
+### 	3.5 TCL(Transaction Control Language)
 
 - Transaction - Unit or Work, all or nothing, ACID(Atonomity, Continuity, Isolation, D)
 - DB에서 Transaction 단위 - 하나 이상의 DML, 하나의 DDL, 하나의 DCL
@@ -129,7 +129,7 @@ when not mathced then
 
 
 
-### 3.6 데이터베이스의 객체
+### 	3.6 데이터베이스의 객체
 
 - table - 구조, 물리적 data (Record + Column)
 
@@ -161,7 +161,7 @@ when not mathced then
 
 ## 4. DDL
 
- ### 4.1 테이블 생성
+ ### 	4.1 테이블 생성
 
 ```sql
 create table 테이블명 (
@@ -318,8 +318,69 @@ constraint emp2_pk  primary key (empno, ename) ---테이블 레벨
   ```
 
 - PK와 UK에 index 자동 생성 목적 - 정합성 체크, 중복값 체크를 빠르게 수행
+
 - index 생성에 적합한 조건
-  - where 조건에 사용되는 컬럼
-  - join절에 사용되는 컬럼
-  - order by절에 사용되는 컬럼
-    - 컬럼 중에서 distinct value(선택도)값이 많아야 합니다.
+
+  - ```
+    where 조건에 사용되는 컬럼 
+    join 컬럼
+    order by 컬럼
+    컬럼중에서 distinct value(선택도)값이 많아야 함 
+    where절의 = 연산조건의 결과 행이 5%이내 
+    인덱스 생성 컬럼으로 조회 결과 행수가 10%를 초과하면 손익분기점으로 table full scan이 더 유리
+    거의 update가 발생하지 않는 컬럼 - 자주 update되는 컬럼은 인덱스 생성하면 성능 저하
+    4개 블럭이상에 데이터가 저장된 테이블
+    ```
+
+  - 단일 컬럼 인덱스
+
+  - 복합 컬럼 인덱스
+
+  - unique 인덱스
+
+  - non unique 인덱스
+
+  - funcation-based 인덱스 (컬럼값의 내림차순으로 생성, 컬럼표현식)
+
+
+
+### 	4.2 테이블 변경
+
+ ```sql
+alter table 테이블명 modify (컬럼 컬럼타입(크기) );
+ ```
+
+- 컬럼 타입 변경할 때 컬럼값이 존재하더라도 char5 -> varchar2(10) 변경은 가능
+- 컬럼 타입 변경할 때 호환되지 않는 컬럼타입으로 변경할 때는 컬럼값을 null로 변경한 후에 컬럼타입을 변경할 수 있음
+- 컬럼 크기를 변경할 때 크기 증가는 항상 가능, 컬럼값이 존재할 때 컬럼 크기를 줄이려면 저장된 컬럼값의 최대 길이보다 작게 줄일 수 없음
+
+
+
+```sql
+alter table 테이블명 add constraint~;
+alter table 테이블명 drop constraint~;
+alter table 테이블명  add (컬럼 컬럼타입(크기), 컬럼 컬럼타입(크기),..);
+alter table 테이블명 drop (컬럼 컬럼타입(크기), 컬럼 컬럼타입(크기),..);
+alter table 테이블명 drop column 컬럼명;
+alter table 테이블명 rename column old명 to new명;
+alter table 테이블명 enable constraint~;
+alter table 테이블명 disable constraint~;
+```
+
+
+
+	### 	4.3 테이블 제거
+
+```sql
+delete table 테이블명; --테이블이름 rename되어 recyclebin에 저장됨... 저장 공간이 부족할 때 oracle server가 제거
+
+delete table 테이블명 purge; --recyclebin을 물리적으로 완전 삭제
+purge recyclebin;
+
+truncate table 테이블명[reuse storage]; -- 구조만 남겨두고, date는 완전 삭제(recyclebin에도, undo data도 남기지 않음)
+
+drop table ~ ; --table메타정보, data, 제약조건, index도 함께 삭제
+```
+
+
+
