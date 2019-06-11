@@ -602,5 +602,31 @@ drop sequence 시퀀스명 ;   --메타 정보만 data dictionary로부터 삭�
 
   ### 5.3 롤 관리
 
-- **정의** :  
+- **정의** :  권한 관리를 쉽게 하기 위해 직무별, 업무별로 필요한 권한을 그룹핑하는 것
+
+  ```sql
+  grant update on emp(job, deptno) to kim;
+  
+  select *
+  from 'user%privs';  --user_tab_privs, user_sys_privs
+  select *
+  from session_privs;
+  ```
+
+- **특징**
+
+  - Role을 생성할 수 있는 권한은 DBA에게 있음
+
+  ```sql
+  create role 롤이름;
+  grant 시스템권한, 객체 권한 to 롤이름;
+  grant 롤이름 to 사용자|롤이름|public;
+  
+  revoke 롤이름 from 사용자|롤이름|public;
+  --user_role_privs
+  
+  drop role 롤이름
+  ```
+
+  - Role의 또 하나의 장점은 동적 권한 관리 가능
 
