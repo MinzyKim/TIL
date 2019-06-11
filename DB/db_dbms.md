@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-# DAY13 Database
-
 ## 0. DBMS
 
 ### 	0.1 DBMS의 정의

@@ -1,5 +1,3 @@
-# DAY14 Database
-
 ## *<저번시간 복습>*
 
 ## 0. DBMS

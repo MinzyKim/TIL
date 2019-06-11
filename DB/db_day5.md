@@ -369,7 +369,7 @@ alter table 테이블명 disable constraint~;
 
 
 
-	### 	4.3 테이블 제거
+### 	4.3 테이블 제거
 
 ```sql
 delete table 테이블명; --테이블이름 rename되어 recyclebin에 저장됨... 저장 공간이 부족할 때 oracle server가 제거
@@ -386,7 +386,7 @@ PK와 UK에 index 자동 생성 목적 - 정합성 체크, 중복값 체크를 �
 
 
 
-	### 	4.4 View
+### 	4.4 View
 
 - **정의** : 가상 테이블로, 하나 이상의 테이블을 조회하는 select문을 저장한 객체를 의미함
   - **simple view** : 하나의 대상 테이블로부터 view 생성, not null 제약조건이 선언된 컬럼은 모두 포함, 컬럼표현식X, group by X, 그룹함수 X, rowid X, 
