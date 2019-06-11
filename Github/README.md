@@ -1,9 +1,10 @@
 # TIL
 
-Today I Learned. Daily Commit.
+## Today I Learned. Daily Commit.
 
-Java
+**Java**
 
-Algorithm
+*Algorithm*
 
-Thanks To hphk
+***Thanks To hphk***
+

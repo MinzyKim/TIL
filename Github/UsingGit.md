@@ -1,3 +1,5 @@
+### <새로 시작할 때>
+
 git add .
 
 git commit -m "name"

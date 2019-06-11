@@ -1,6 +1,6 @@
 # Github 특강
 
-Github로 취업하기
+**Github로 취업하기**
 
 
 
