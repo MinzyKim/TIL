@@ -118,10 +118,10 @@
 
 ### 1.2.1 null관련 함수
 
-- nvl(column, expression) - coulumn이랑 expression이 동일한 타입이어야 함
-- nvl2(column, expression1(null이 아닐 때), expression2(null일 때)) - expression1이랑 expression2이 동일한 타입이어야 함
-- coalesce(column, expression1, expression2, ...) - 첫번째 인수가 null인지 확인, 모든 인수를 체크해서 null이 아닌 최초의 값을 만나면 null이 아닌 값을 리턴하고 함수를 종료
-- nullIf(expression1, expression2) - expression1이랑 expression2 가 값이 동일하면 null을 리턴, 다르면 expression1을 리턴
+- **nvl(column, expression)** - coulumn이랑 expression이 동일한 타입이어야 함
+- **nvl2(column, expression1(null이 아닐 때), expression2(null일 때))** - expression1이랑 expression2이 동일한 타입이어야 함
+- **coalesce(column, expression1, expression2, ...)** - 첫번째 인수가 null인지 확인, 모든 인수를 체크해서 null이 아닌 최초의 값을 만나면 null이 아닌 값을 리턴하고 함수를 종료
+- **nullIf(expression1, expression2)** - expression1이랑 expression2 가 값이 동일하면 null을 리턴, 다르면 expression1을 리턴
 
 - 문> 사원들중 커미션을 받지 않는 사원들은 -1로 출력(이름, 급여, 커미션)
 - 문> 사원들중 커미션을 받는 사원은 급여+커미션을 출력하고, 커미션을 받지 않는 사원은 'No Commition'을 출력
