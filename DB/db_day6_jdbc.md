@@ -117,7 +117,7 @@ truncate table ~ reuse storage;
 
 ## 3. Index
 
-- **정의** : 검색속도를 향상(select 수행 성능향상)을 위해서 사용하는 객체
+- **정의** : 검색속도의 향상(select 수행 성능향상)을 위해서 사용하는 객체
 
 - **종류**
 
@@ -226,7 +226,7 @@ truncate table ~ reuse storage;
 
   ```java
   try{
-  Calss.forName(" "); //oracle.jdbc.OracleDriver
+  Class.forName(" "); //oracle.jdbc.OracleDriver
   }catch(ClassNotFoundException e){
   }
   ```
