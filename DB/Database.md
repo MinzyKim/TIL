@@ -23,14 +23,14 @@
 
 ​     -  데이터를 파일 단위로 저장하여 중복 가능
 
-- ```
-  <기존의 파일 시스템>
-  - 데이터를 파일 단위로 저장하여 중복 가능
-  - 데이터의 중복 저장으로 일관성이 결여됨
-  - 데이터 정의와 프로그램의 독립성 유지 불가능
-  - 관리 기능 보통
-  - 프로그램 개발 생산성 나쁨
-  ```
+```
+<기존의 파일 시스템>
+- 데이터를 파일 단위로 저장하여 중복 가능
+- 데이터의 중복 저장으로 일관성이 결여됨
+- 데이터 정의와 프로그램의 독립성 유지 불가능
+- 관리 기능 보통
+- 프로그램 개발 생산성 나쁨
+```
 
 - 통합된 데이터 - 데이터의 중복을 최소화하여 중복으로 인한 데이터 불일치 현상을 제거
 
@@ -279,13 +279,14 @@ SQL> select * from emp;  --테이블의 모든 데이터 조회
       
       select lengthb('korea') lengthb('대한민국')
       from dual;
+      --byte단위 검색, 한글은 2byte로 계산
       
       --함수 안에 함수를 nested하면  nested된 함수부터 처리
       select concat(concat(ename, ' is '), job)
       from emp;
       
-      ```
-
+  ```
+      
     - ```sql
       ## substr, instr 함수
       select substr('today is 2015년 4월 26일', 1, 5), 
@@ -296,12 +297,12 @@ SQL> select * from emp;  --테이블의 모든 데이터 조회
       -- 글자수 세고 위치에 있는 글자 리턴
       select instr('korea is wonderful', 'o'),
       	instr('korea is wonderful', 'o',1,2),
-      	instr('korea is wonderful', 'o',9),
+      	instr('korea is wonderful', 'o',9),--9번째 이후 o
       	instr('korea is wonderful', 'x')
       	from dual;
       -- o가 들어간 문자 출력, 두번째는 2번째로 등장하는 o출력, 9번째 글자이후의 o 출력, 없는 문자 출력시 0출력
-      ```
-
+    ```
+    
     - ```sql
       #lpad : left padding,  
       #rpad : right padding
@@ -312,8 +313,8 @@ SQL> select * from emp;  --테이블의 모든 데이터 조회
       
       select ename, sal, rpad(sal, 10, '*')
       from emp;
-      ```
-
+    ```
+    
     - ```sql
       #trim, ltrim, rtrim 함수
       select length('  hello  '),  length(trim('  hello  '))
@@ -338,6 +339,7 @@ SQL> select * from emp;  --테이블의 모든 데이터 조회
     - ```sql
       select round(12.345, 2), round(12.345, 0), round(12.345, -1)
       from dual;
+      --2째자리까지, 정수만, 첫번째자리에서 반올림
       
       select trunc(12.345, 2), trunc(12.345), trunc(12.345, -1)
       from dual;
@@ -346,6 +348,7 @@ SQL> select * from emp;  --테이블의 모든 데이터 조회
       from dual;
       
       select ceil(12.345), floor(12.345) from dual;
+      --올림, 버림
       
       select power(3, 2), power(5, 2)
       from dual;
@@ -1614,3 +1617,4 @@ where sal>=1100 or job = 'MANAGER';
 
 
 >>>>>>> 0107cc8ead4b6f23493906693327adc2d139c59d
+
