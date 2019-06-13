@@ -229,7 +229,7 @@
   <html>
   <head>
   <meta charset='utf-8'>
-  <title>HTML 기본 구조 </title>
+  <title>웹 페이지 레이아웃</title>
   <style type="text/css">
   	* {
   		padding: 0;
