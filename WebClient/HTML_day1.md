@@ -36,4 +36,31 @@
 
   ## **<나머진 실습>**
 
+  ```html
+  <!D0CTYPE html>
+  <html>
+  <head>
+  	<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+  <meta charset='utf-8'>
+  <title>HTML 기본 구조 </title>
+  <style type="text/css">
+  	body {
+    background-color: lightyellow;
+  }
   
+  h1 {
+    color: black;
+    text-align: left;
+  }
+  
+  p {
+    font-family: verdana;
+    font-size: 20px;
+  }
+  	}
+  </style>
+  </head>
+  ```
+  
+  
+
