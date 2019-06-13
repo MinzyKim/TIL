@@ -56,7 +56,7 @@ where column 연산자 (select ~
 
 
 
-- *긴 query문에서 반복적으로 사용하는 subquery를 먼저 정의해서 재사용하려면
+*긴 query문에서 반복적으로 사용하는 subquery를 먼저 정의해서 재사용하려면
 
 ```sql
 with
