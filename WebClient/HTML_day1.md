@@ -222,4 +222,104 @@
   </html>   
   ```
   
+  ## <웹 페이지 레이아웃>
+  
+  ```html
+  <!D0CTYPE html>
+  <html>
+  <head>
+  <meta charset='utf-8'>
+  <title>HTML 기본 구조 </title>
+  <style type="text/css">
+  	* {
+  		padding: 0;
+  		margin:0;
+  	}
+  	.clear{
+  		clear: both;
+  	}
+  	header{
+  		width: 995px;
+  		height: 100px;
+  		margin-top: 10px;
+  		border: solid 1px #cccccc;
+  	}
+  
+  	#logo{
+  		float: left;
+  		border: solid 1px red;
+  	}
+  
+  	#top{
+  		float: right;
+  		margin: 30px 20px 0 0;
+  		border: solid 1px red;
+  	}
+  
+  	nav{
+  		width: 995px;
+  		height: 70px;
+  		margin-top: 10px;
+  		border: solid 1px green;
+  	}
+  	section {
+  		width: 674px;
+  		height: 240px;
+  		float: left;
+  		margin-top: 10px;
+  		border: solid 1px green;
+  	}
+  
+  	aside {
+  		width: 290px;
+  		height: 240px;
+  		float: left;;
+  		margin-top: 10px;
+  		margin-left: 29px;
+  		border: solid 1px green;
+  	}
+  	footer{
+  		width: 995px;
+  		height: 130px;
+  		margin-top: 10px;
+  		border: solid 1px green;
+  	}
+  
+  
+  </style>
+  </head>
+  <body>
+  	<header>
+  		상단 헤더
+  	</header>
+  
+  	<nav>
+  		 네비게이션 메뉴
+  	</nav>
+  
+  	<section>
+  		메인 콘텐츠
+  	</section>
+  
+  	<aside>
+  		사이드바
+  	</aside>
+  	<header>
+  	<div class="clear"></div>
+  
+  	<footer>
+  		하단 푸터
+  	</footer>
+  
+  	<div id='logo'>
+  		<img src="img/logo.png">
+  	</div>
+  
+  	<div id='top'>
+  		로그인 | 회원가입 | 사이트 맵 | 회사소개
+  	</div>
+  </header>
+  </body>
+  ```
+  
   
