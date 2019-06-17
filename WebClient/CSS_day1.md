@@ -499,3 +499,73 @@ h2 {background-color: orange}
 </html>
 ```
 
+```css
+
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset='utf-8'>
+    <title>CSS3 Style Property Basic</title>
+    <style>
+        p:nth-child(1) { }
+        p:nth-child(2) { font-size: 100%; }
+        p:nth-child(3) { font-size: 150%; }
+        p:nth-child(4) { font-size: 200%; }
+        
+        table{
+            visibility: collapse;/*테이블이 보이지 않게 하기 위해서*/
+        }
+        #box{
+            background-color: black;
+            color: white;
+
+            opacity: 0.4;
+        }
+        .box{
+            width: 100px;
+            height: 100px;
+            position: absolute;
+        }
+        .box:nth-child(1){
+            background-color: red;
+            left: 10px;
+            top: 10px;
+
+            z-index: 100;
+        }
+
+        .box:nth-child(2){
+            background-color: green;
+            left:50px;
+            top:50px;
+
+            z-index: 10;
+        }
+        .box:nth-child(3){
+            background-color: blue;
+            left:90px;
+            top: 90px;
+
+            z-index: 1;
+        }
+          body > div {
+            width: 400px; height: 100px;
+            border: 3px solid black;
+
+            position: relative;
+            overflow: hidden;
+        }
+
+    </style>
+</head>
+<body>
+    <div>
+    <div class="box">  </div>
+     <div class="box">  </div>
+       <div class="box">  </div>
+   </div>
+
+</body>
+</html>
+```
+
