@@ -365,3 +365,28 @@ document.write(input2+typeof(input2)+"<br>");
 
 
 
+### 7. 제어 구문
+
+- java와 거의 동일하다.
+
+  ```javascript
+  	var input2 = window.prompt("숫자를 입력하세요", 0);
+  	if(input2%2==0){
+  		document.write(input2,"은(는) 짝수입니다.");
+  	}else{
+  	document.write(input2,"은(는) 홀수입니다")}
+  
+  	var input2 = window.prompt("숫자를 입력하세요", 0);
+  	switch(input2){
+  		case 1:
+  		input2%2 == 0
+  		document.write(input2,"은(는) 짝수입니다.");
+  
+  		default:
+  		document.write(input2,"은(는) 홀수입니다.");
+  	}
+  
+  // 같은 주제를 if문과 switch문을 이용해 돌려봤다.
+  ```
+
+  
