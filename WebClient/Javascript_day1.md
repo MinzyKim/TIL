@@ -369,6 +369,8 @@ document.write(input2+typeof(input2)+"<br>");
 
 - java와 거의 동일하다.
 
+- **If문과 Switch문**
+
   ```javascript
   	var input2 = window.prompt("숫자를 입력하세요", 0);
   	if(input2%2==0){
@@ -389,4 +391,21 @@ document.write(input2+typeof(input2)+"<br>");
   // 같은 주제를 if문과 switch문을 이용해 돌려봤다.
   ```
 
+- **While문과 For문**
+
+  ```javascript
+  for(var i =0; i<10;i++){}
+  var i=0;
+  while(i<10){}
+  do{}while();
+     
+  //예제 ) 홀수만 출력하기
+  var nums = [1,2,3,4,5,6,7,8,9,10];
+  for( var n in nums){
+  	if(n%2 == 1)
+      document.write(n);
+  }
+  ```
+
   
+
