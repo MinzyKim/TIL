@@ -309,3 +309,59 @@ student instanceof Object : true
 ko in student : true
 ```
 
+
+
+## 5.명시적 타입 변환
+
+```javascript
+
+	#문자열로 형변환 : 값+"" 또는 String(값)<br>
+	#숫자로 형변환 : window.parseInt("123a") 또는 window.parseFloat("123a") 
+					number("123a")<br>
+	#논리값으로 형변환 : !!값 또는 Boolean(값);
+
+<script type="text/javascript">
+	console.log(parseInt("3.14"));
+	document.write(window.parseInt("123a")+"<br>");
+	document.write(window.parseFloat("123a")+"<br>");
+	document.write(Number("123a")+"<br>");
+	document.write(!!" "+"<br>");
+	document.write(!!null+"<br>");
+	document.write(!!undefined+"<br>");
+	document.write(!!NaN+"<br>");
+	document.write(!!""+"<br>");
+```
+
+**출력값*
+
+```javascript
+123
+NaN
+true
+false
+false
+false
+false
+```
+
+### 6. 웹 브라우저에서의 입출력
+
+```javascript
+var input1 = window.prompt("점수를 입력하세요", 0);
+document.write(input1+typeof(input1)+"<br>");
+
+var input2 = window.confirm("종료하시겠습니까?");
+document.write(input2+typeof(input2)+"<br>");
+```
+**출력값*
+
+![1560842507369](C:\Users\student\AppData\Roaming\Typora\typora-user-images\1560842507369.png)
+
+​						0string
+
+![1560842526017](C:\Users\student\AppData\Roaming\Typora\typora-user-images\1560842526017.png)
+
+​						trueboolean
+
+
+
