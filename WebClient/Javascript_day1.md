@@ -281,3 +281,31 @@ new Number(2) === 2 : false
 10>20>30 : false
 ```
 
+
+
+### 4. 기타 연산자
+
+```javascript
+//1
+	    var a ="window.alert('eval은 문자열을 자바스크립트 코드로 실행합니다')";
+	    eval(a);
+	   
+	    var student = { "name" :"kim", "ko":"85", "en":90, "math":80};
+//2
+	    document.write("typeof(student) : "+ typeof(student)+"<br>");
+//3
+	    document.write("student instanceof Object : "+ (student instanceof Object)+"<br>");
+//4
+	    document.write(" ko in student : " + ( 'ko' in student)+"<br>");
+```
+
+**출력값*
+
+![1560837133860](C:\Users\student\AppData\Roaming\Typora\typora-user-images\1560837133860.png)
+
+```javascript
+typeof(student) : object
+student instanceof Object : true
+ko in student : true
+```
+
