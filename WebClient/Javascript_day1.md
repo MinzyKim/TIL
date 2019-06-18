@@ -104,3 +104,180 @@ undefined
 undefined
 ```
 
+## 1. 산술 연산
+
+### 1.1 산술 연산자와 특성
+
+- 산술 이항 연산자 : + - * / %
+
+  - 특징
+
+    - 정수끼리 나누어도 결과가 부동소수점
+
+    - %의 피연산자는 부동소수점
+
+    - '+'연산자는 피연산자 중 하나가 문자열이면 나머지 피연산자를 문자열로 만든다.
+
+    - 기타
+
+      - 0/0 -> NaN
+      - "one"+1 -> NaN
+      - true + true -> 2
+      - 1 + null -> 1
+      - 1 + undefined -> NaN
+
+    - ++a와 a++
+
+      - ```javascript
+         a=1;
+        	    b=++a;
+        	    console.log("b="+b);
+        	    console.log("a="+a);
+        
+        	    c=a++ + 2;
+        	    console.log("c="+c);
+        	    console.log("a="+a);
+        
+        ```
+
+        **출력값*
+
+        ![1560833066441](C:\Users\student\AppData\Roaming\Typora\typora-user-images\1560833066441.png)
+
+- Math 객체의 프로퍼티
+
+  - Random 객체 사용해보기
+
+  - ```javascript
+      function dice (){
+    	    	var num = Math.round(Math.random()*5+1);
+    	    	return num;
+    	    }
+    	    document.write(dice());
+    ```
+
+## 2. 문자열 연산
+
+- 문자열 제어하기
+
+  - 문자열 연결
+
+    ```javascript
+    "Hello" + "World!"
+    10 + " little indians"
+    ```
+
+    **출력값*
+
+    ```javascript
+    Hello World!
+    10 little indians
+    ```
+
+  - 여러가지 문자열 제어 함수
+
+    ```javascript
+    	    var msgObj = new String("Everything is practice");
+    //1
+    	    document.write("msgObj.length : "+ msgObj.length + "<br>");
+    //2
+    	    document.write("msgObj.charAt(3) : "+ msgObj.charAt(3)+ "<br>");
+    //3
+    	    document.write("msgObj.substring(7, 10) : "+msgObj.substring(7,10)+ "<br>");
+    //4
+    	    document.write("msgObj.slice(7,10) : "+ msgObj.slice(7,10)+ "<br>");
+    //5
+    	    document.write("msgObj.slice(-3) : "+msgObj.slice(-3)+ "<br>");
+    //6
+    	    document.write("msgObj.slice(-9, -6) : "+msgObj.slice(-9, -6)+ "<br>");
+    //7
+    	    document.write('msgObj.indexOf("t") : '+msgObj.indexOf("t")+ "<br>");
+    //8
+    	    document.write("msgObj.indexOf('i',10) : "+msgObj.indexOf('i', 10)+ "<br>");
+    //9
+    	    document.write("msgObj.replace('p','P') : "+ msgObj.replace('p','P'));
+    //10
+    	    document.write("msgObj.includes('thing') : "+msgObj.includes("thing")+"<br>");
+    //11
+    	    document.write("msgObj.charCodeAt(0) : "+ msgObj.charCodeAt(0)+"<br>");
+    //12
+    	    document.write("msgObj.codePointAt(0) : "+msgObj.codePointAt(0)+"<br>");
+    ```
+
+    **출력값*
+
+    ```javascript
+    msgObj.length : 22
+    msgObj.charAt(3) : r
+    msgObj.substring(7, 10) : ing
+    msgObj.slice(7,10) : ing
+    msgObj.slice(-3) : ice
+    msgObj.slice(-9, -6) : pr
+    msgObj.indexOf("t") : 5
+    msgObj.indexOf('i',10) : 11
+    msgObj.split('') : E,v,e,r,y,t,h,i,n,g, ,i,s, ,p,r,a,c,t,i,c,e
+    msgObj.replace('p','P') : Everything is PracticemsgObj.includes('thing') : true
+    msgObj.charCodeAt(0) : 69
+    msgObj.codePointAt(0) : 69
+    ```
+
+    
+
+### 3. 논리 연산자
+
+```javascript
+// == 는 값만 비교
+	    //1
+	    document.write("null == undefined : " + (null==undefined)+"<br>");
+	    //2
+	    document.write("1 == '1' :" + (1 == '1')+"<br>");
+	    //3
+	    document.write("255 == '0xff : "+(255 == '0xff')+"<br>");
+	    //4
+	    document.write("true == 1 : "+ (true == 1)+"<br>");
+	    //5
+	    document.write("true == '1': "+ (true == '1')+"<br>");
+	    //6
+	    document.write("new String('a') == 'a' : " + (new String('a') =='a')+"<br>");
+	    //7
+	    document.write("new Number(2) == 2 : " + (new Number(2) ==2)+"<br>");
+
+// === 는 값과 타입도 비교
+	    //1
+	    document.write("null === undefined : "+(null === undefined )+"<br>");
+	    //2
+	    document.write(" 1 === '1' : "+ ( 1 === '1')+"<br>");
+	    //3
+	    document.write(" 255 === '0xff' : "+ ( 255 === '0xff' )+"<br>");
+	    //4
+	    document.write("true === 1 : "+ (true === 1)+"<br>");
+	    //5
+ 		document.write("true === '1': "+ (true === '1')+"<br>");
+	    //6
+	    document.write("new String('a') === 'a' : " + (new String('a') ==='a')+"<br>");
+	    //7
+	    document.write("new Number(2) === 2 : " + (new Number(2) ===2)+"<br>");
+		//8
+	    document.write("10>20>30 : "+(10>20>30)+"<br>")
+```
+
+​		**출력값*
+
+```javascript
+null == undefined : true
+1 == '1' :true
+255 == '0xff : true
+true == 1 : true
+true == '1': true
+new String('a') == 'a' : true
+new Number(2) == 2 : true
+null === undefined : false
+1 === '1' : false
+255 === '0xff' : false
+true === 1 : false
+true === '1': false
+new String('a') === 'a' : false
+new Number(2) === 2 : false
+10>20>30 : false
+```
+
