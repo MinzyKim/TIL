@@ -165,3 +165,47 @@ with(student){
 홍길동의 평균 : 82.5
 ```
 
+
+
+## 1. Document객체
+
+```javascript
+<!D0TYPE>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title></title>
+<script type="text/javascript">
+	window.onload=function(){
+	var h1 = document.createElement("h1");
+	var text1 = document.createTextNode("새 요소 추가");
+	h1.appendChild(text1);
+	document.body.appendChild(h1);
+
+	var img1= document.createElement("img");
+	img1.src = "./puppy1.jpg";
+	img1.width= 300;
+	img1.height=500;
+	document.body.appendChild(img1);
+
+	var img2= document.createElement("img");
+	img2.setAttribute('src', "./puppy3.jpg");
+	img2.setAttribute('width', 400);
+	img2.setAttribute('height', 500);
+	console.log(img2.getAttribute("src"));
+	document.body.appendChild(img2);
+}
+</script>
+</head>
+	<body>
+		<h3>Document객체를 이용한 문서 구조 변경</h3>
+	</body>
+	</html>
+```
+
+**출력값*
+
+![1560930104634](C:\Users\student\AppData\Roaming\Typora\typora-user-images\1560930104634.png)
+
+
+
