@@ -97,3 +97,14 @@
 - 문서의 요소 객체.innerText = "<strong>강조체</strong>"
 ```
 
+
+
+*<이번시간>*
+
+## 1. Iterator
+
+```javascript
+Iterator <= Collection.iterator()
+Symbol.iterator()
+```
+
