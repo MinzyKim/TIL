@@ -22,7 +22,9 @@ git pull origin BRANCH_NAME
 
 처음 컴퓨터 옮기면
 
-=> git config --global user.name 이름
+=>
+
+git config --global user.name 이름
 
 git config --global user.email 이메일
 
