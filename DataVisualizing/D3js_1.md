@@ -137,3 +137,417 @@ d3.select("#myGraph")	// SVG 요소를 지정
 }); //addEventListener() end
 ```
 
+#### 1-3 여러 개의 꺾은선 그래프 표시
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Sample</title>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+ 
+<script src="./js/line3.js"></script>
+		<style>
+			svg { width: 380px; height: 240px; border: 1px solid black; }
+		  .line { fill: none; stroke: black; }
+		  .axis text {
+				font-family: sans-serif;
+				font-size: 11px;
+			}
+		  .axis path,
+		  .axis line {
+				fill: none;
+				stroke: black;
+			}
+		  .axis_x line {
+				fill: none;
+				stroke: black;
+			}
+          .itemA { stroke: #000; }
+          .itemB { stroke: #F00; }
+          .itemC { stroke: #00F; }
+		</style>
+	</head>
+	<body>
+		<h1>여러 개의 꺾은선 그래프 표시</h1>
+		<svg id="myGraph"></svg>
+		 
+	</body>
+</html>
+
+```
+
+```javascript
+window.addEventListener("load",function(){
+var svgWidth =320;   //SVG요소의 넓이
+var svgHeight =240;   //SVG요소의 높이
+var offsetX = 30;
+var offsetY = 20;
+var scale = 2.0;
+var dataSet1 = [10,47,65,8,64,99,75,22,63,80];   //데이터셋
+var dataSet2 = [90,77,55,48,64,90,85,42,13,40];   
+var dataSet3 = [50,27,45,58,84,70,45,22,30,90];   
+var margin = svgWidth/(dataSet1.length - 1); // 꺾은 선 그래프의 간격 계산
+drawGraph(dataSet1, "itemA");   //itemA의 꺽은선 그래프 표시
+drawGraph(dataSet2, "itemB");   //itemB의 꺽은선 그래프 표시
+drawGraph(dataSet3, "itemC");   //itemC의 꺽은선 그래프 표시
+drawScale();   //눈금 표시
+
+
+//꺾은 선 그래프의 좌표를 계산하는 메소드
+function drawGraph(dataSet, cssClassName){
+   //꺽은선 그래프의 좌표를 계산하는 메소드
+   var line = d3.line()   //svg의 선
+   .x(function(d,i){               //X 좌표는 표시 순서x 간격
+      return  offsetX + i * margin;   //X는 꺽은선 따라 움직이기 때문에 index * margin 으로
+   })                           //marign(전체길이/데이터셋갯수나누기) 을 더해준다.)
+   .y(function(d,i){
+      return svgHeight - (d * scale) - offsetY;   //데이터로부터 Y 좌표 빼기
+   })                                    //y는고정이라 i(index)안씀.
+   
+   //꺾은 선 그래프 그리기
+   var LineElements = d3.select("#myGraph")
+   .append("path")         //데이터 수만큼 path 요소가 추가됨
+   .attr("class", "line " + cssClassName)      // CSS 클래스 지정
+   .attr("d", line(dataSet))      //연속선 지정
+   
+}
+
+
+function drawScale(){
+
+   //눈금을 표시하기 위한 스케일 설정
+   var yScale = d3.scaleLinear() // 스케일 설정
+   .domain([0,100])   // 원래 크기
+   .range([scale*100, 0])   // 실제 출력 크기
+   
+   //눈금의 표시 위치를 왼쪽으로 지정
+   var axis = d3.axisLeft(yScale)
+
+   //눈금을 설정하여 표시
+   d3.select("#myGraph").append("g")
+   .attr("class", "axis")
+   .attr("transform", "translate("+offsetX+", "+offsetY+")")   //눈금을 오프셋 X,Y만큼 움직여준다.
+   .call(axis)
+   
+   // 가로 방향의 선을 표시
+   d3.select("#myGraph")
+     .append("rect")   
+     .attr("class", "axis_x")   
+     .attr("width", svgWidth)   
+     .attr("height", 1)   // 
+     .attr("transform", "translate("+offsetX+", "+(svgHeight-offsetY-0.5)+")")   
+}   
+   
+   
+
+});   // addEventListener() end
+```
+
+#### 1-4 영역 안을 칠한 꺾은선 그래프 표시
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Sample</title>
+<script src="https://d3js.org/d3.v4.js"></script>
+<script src="./js/line4.js"></script>
+<sytle>
+</sytle>
+</head>
+<body>
+<h1> 영역 안을 칠한 꺾은선 그래프 표시</h1>
+
+<div id="my_dataviz"></div>
+<br>
+</body>
+</html>
+```
+
+```javascript
+window.addEventListener("load",function(){
+	
+	   // set the dimensions and margins of the graph
+	var margin = {top:10, right: 30, bottom: 30, left: 50},
+		width = 460 - margin.left - margin.right,
+		height = 400 - margin.top - margin.bottom;
+	
+	//append the svg object to the body of the page
+	var svg = d3.select("#my_dataviz")
+		.append("svg")
+		.attr("width", width + margin.left + margin.right)
+		.attr("hight", height + margin.top + margin.bottom)
+		.append("g")
+		.attr("transform",
+				"translate(" + margin.left +", "+ margin.top+")");
+	//Road the data
+	d3.csv("./datas/orders.csv",
+			// when reading the csv, I must format variables:
+	function(d){
+		return { date : d3.timeParse("%Y-%m-%d")(d.date), value : d.value }
+	},
+	
+	// Now I can user this dataset :
+	function(data){
+		
+		// Add X axis --> it is a date format
+		var x = d3.scaleTime()
+			.domain(d3.extent(data, function(d) { return d.date; }))
+			.range([0, width ]);
+		svg.append("g")
+			.attr("transform", "translate(0, "+height+")")
+			.call(d3.axisBottom(x));
+		
+		// Add y axis
+		var y = d3.scaleLinear()
+			.domain([0, d3.max(data, function(d) { return +d.value; })])
+			.range([ height, 0 ]);
+		
+		svg.append("g")
+			.call(d3.axisLeft(y));
+		
+		//Add the area
+		svg.append("path")
+			.datum("data")
+			.attr("fill", "#cce5df")
+			.attr("stroke", "#69b3a2")
+			.attr("stroke-width", 1.5)
+			.attr("d", d3.area()
+						 .x(function(d) { return x(d.date ) })
+						 .y0(y(0))
+						 .y1(function(d) { return y(d.value) })
+			)
+			
+	})
+})
+```
+
+#### 1-5 여러 개의 꺾은선 그래프 표시
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Sample</title>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
+ 
+<script src="./js/line5.js"></script>
+		<style>
+			svg { width: 380px; height: 300px; border: 1px solid black; }
+		  .line { fill: none; stroke: black; }
+		  .axis text {
+				font-family: sans-serif;
+				font-size: 11px;
+			}
+		  .axis path,
+		  .axis line {
+				fill: none;
+				stroke: black;
+			}
+		  .axis_x line {
+				fill: none;
+				stroke: black;
+			}
+          .itemA { stroke: #000; }
+          .itemB { stroke: #F00; }
+          .itemC { stroke: #00F; }
+		</style>
+	</head>
+	<body>
+		<h1>여러 개의 꺾은선 그래프 표시</h1>
+		<svg id="myGraph"></svg>
+		 
+	</body>
+</html>
+
+```
+
+```javascript
+window.addEventListener("load",function(){
+var svgWidth =320;   //SVG요소의 넓이
+var svgHeight =240;   //SVG요소의 높이
+var offsetX = 30;
+var offsetY = 20;
+var scale = 2.0;
+var dataSet = [
+	[
+		{ year : 2004, value : 10 },
+		{ year : 2005, value : 47 },
+		{ year : 2006, value : 65 },
+		{ year : 2007, value : 8 },
+		{ year : 2008, value : 64 },
+		{ year : 2009, value : 99 },
+		{ year : 2010, value : 75 },
+		{ year : 2011, value : 22 },
+		{ year : 2012, value : 63},
+		{ year : 2013, value : 80 }
+	],
+	[
+		{ year : 2004, value : 90 },
+		{ year : 2005, value : 77 },
+		{ year : 2006, value : 55 },
+		{ year : 2007, value : 48},
+		{ year : 2008, value : 64 },
+		{ year : 2009, value : 90 },
+		{ year : 2010, value : 85 },
+		{ year : 2011, value : 42 },
+		{ year : 2012, value : 13 },
+		{ year : 2013, value : 40 }
+	],
+	[
+		{ year : 2004, value : 50 },
+		{ year : 2005, value : 27 },
+		{ year : 2006, value : 45 },
+		{ year : 2007, value : 58 },
+		{ year : 2008, value : 84 },
+		{ year : 2009, value : 70 },
+		{ year : 2010, value : 45 },
+		{ year : 2011, value : 22 },
+		{ year : 2012, value : 30},
+		{ year : 2013, value : 90 }
+	]
+]
+var margin = svgWidth/(dataSet[0].length - 1); // 꺾은 선 그래프의 간격 계산
+drawGraph(dataSet[0], "itemA");   //itemA의 꺽은선 그래프 표시
+drawGraph(dataSet[1], "itemB");   //itemB의 꺽은선 그래프 표시
+drawGraph(dataSet[2], "itemC");   //itemC의 꺽은선 그래프 표시
+drawScale();   //눈금 표시
+
+
+//꺾은 선 그래프의 좌표를 계산하는 메소드
+function drawGraph(dataSet, cssClassName){
+   //꺽은선 그래프의 좌표를 계산하는 메소드
+   var line = d3.line()   //svg의 선
+   .x(function(d,i){               //X 좌표는 표시 순서x 간격
+      return  offsetX + i * margin;   //X는 꺽은선 따라 움직이기 때문에 index * margin 으로
+   })                           //marign(전체길이/데이터셋갯수나누기) 을 더해준다.)
+   .y(function(d,i){
+      return svgHeight - (d.value * scale) - offsetY;   //데이터로부터 Y 좌표 빼기
+   })                                    //y는고정이라 i(index)안씀.
+   
+   //꺾은 선 그래프 그리기
+   var LineElements = d3.select("#myGraph")
+   .append("path")         //데이터 수만큼 path 요소가 추가됨
+   .attr("class", "line " + cssClassName)      // CSS 클래스 지정
+   .attr("d", line(dataSet))      //연속선 지정
+   
+}
+
+
+function drawScale(){
+
+   //눈금을 표시하기 위한 스케일 설정
+   var yScale = d3.scaleLinear() // 스케일 설정
+   .domain([0,100])   // 원래 크기
+   .range([scale*100, 0])   // 실제 출력 크기
+   
+   //눈금의 표시 위치를 왼쪽으로 지정
+   var axis = d3.axisLeft(yScale)
+
+   //눈금을 설정하여 표시
+   d3.select("#myGraph").append("g")
+   .attr("class", "axis")
+   .attr("transform", "translate("+offsetX+", "+offsetY+")")   //눈금을 오프셋 X,Y만큼 움직여준다.
+   .call(axis)
+   
+   // 가로 방향의 선을 표시
+   d3.select("#myGraph")
+     .append("rect")   
+     .attr("class", "axis_x")   
+     .attr("width", svgWidth)   
+     .attr("height", 1)   // 
+     .attr("transform", "translate("+offsetX+", "+(svgHeight-offsetY-0.5)+")")   
+   
+
+var xScale = d3.scaleLinear()
+
+	.domain([new Date("2004/1/1"), new Date("2013/1/1")])
+	.range([0, svgWidth])
+	
+//가로 눈금 표시	
+var bottomAxis = d3.axisBottom(xScale)
+				   .ticks(5)
+				   .tickFormat(function(d,i){
+					   var formatTime = d3.timeFormat("%Y년%m월");
+					   return formatTime(d);
+				   })
+				   
+d3.select("#myGraph")
+  .append("g")
+  .attr("class", "axis")
+  .attr("transform", "translate("+offsetX+", "+(svgHeight - offsetY)+")")
+  .call(
+		  bottomAxis
+  )
+   seletAll("text")
+   .attr("transform", "rotate(90)")
+   .attr("dx", "0.7em")
+   .attr("dy","-0.4em")
+   .style("text-anchor", "start")
+}   
+});   // addEventListener() end
+```
+
+
+
+### 2. 산포도
+
+#### 2-1 기본
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Sample</title>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
+ 
+<script src="./js/plot1.js"></script>
+		<style>
+ svg { width : 380px; height: 240px; border: 1px solid black; }
+ 		.mark { fill: red; stroke: none; }
+</style>
+	</head>
+	<body>
+		<h1> 산포도 표시</h1>
+		<svg id="myGraph"></svg>
+		 
+	</body>
+</html>
+
+```
+
+```javascript
+window.addEventListener("load",function(){
+var svgWidth =320;   //SVG요소의 넓이
+var svgHeight =240;   //SVG요소의 높이
+
+var dataSet = [
+	[30,40], [120, 115], [125, 90], [150, 160], [300, 190],
+	[60, 40], [140, 145], [165, 110], [200, 170],[250, 190]
+];
+
+//산포도 그리기
+var circleElements = d3.select("#myGraph")
+		.selectAll("circle")
+		.data(dataSet)
+		.enter()
+		.append("circle") //데이터의 개수만큼 circle 요소가 추가됨
+		.attr("class", "mark") // CSS 클래스 지정
+		.attr("cx", function(d, i){
+			return d[0]; // 최초 요소를 X 좌표로 함
+		})
+		.attr("cy", function(d, i){
+			return svgHeight-d[1] // 2번째의 요소를 Y 좌표로 함
+		})
+		.attr("r", 5) //반지름을 지정
+ 
+});   // addEventListener() end
+```
+
