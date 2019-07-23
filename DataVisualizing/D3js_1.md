@@ -949,3 +949,313 @@ window.addEventListener("load", function() {
 
 #### 2-5 산포도 표시 -풍선도움말
 
+````html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Sample</title>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
+ 
+<script src="./js/plot5.js"></script>
+		<style>
+ svg { width : 380px; height: 240px; border: 1px solid black; }
+ 		.mark { fill: red; stroke: none; }
+ 		.axis text{
+ 		font-family: sans-serif;
+ 		font-size: 11px;
+ 		}
+ 		.axis path,
+ 		.axis line {
+ 		fill: none;
+ 		stroke: black;
+ 		}
+ 		.grid {
+ 		stroke: gray;
+ 		stroke-dasharray : 4, 2;
+ 		shape-rendering : crispEdges;
+ 		}
+ 		.tip{
+ 	 position: absoulute;
+            top : 0px;
+            left : 0px;
+            z-index: 9999;
+            visibility : hidden;
+            border : 1px solid black;
+            background-color: yellow;
+            width: 80px;
+            height: 16px;
+            overflow : hidden;
+            text-align : center;
+            font-size: 9pt;
+            font-family : Tahoma, Optima, Helvetica;
+            color: black;   
+ 		
+ 		}
+</style>
+	</head>
+	<body>
+		<h1> 산포도 표시 -풍선도움말</h1>
+		<svg id="myGraph"></svg>
+		 
+	</body>
+</html>
+
+````
+
+```javascript
+window.addEventListener("load", function() {
+	var svgWidth = 320; // SVG요소의 넓이
+	var svgHeight = 240; // SVG요소의 높이
+	var offsetX = 30;	// X 좌표의 오프셋
+	var offsetY = 20;	// Y 좌표의 오프셋
+	var svg = d3.select("#myGraph");
+
+	var dataSet = [
+		[ 30, 40 ], [ 120, 115 ], [ 125, 90 ], [ 150, 160 ],
+			[ 300, 190 ], [ 60, 40 ], [ 140, 145 ], [ 165, 110 ], [ 200, 170 ],
+			[ 250, 190 ] 
+		];
+
+	// 산포도 그리기
+	var circleElements = svg.selectAll("circle").data(dataSet)
+
+	circleElements.enter()
+	.append("circle")
+	.attr("class", "mark")
+	.attr("cx",
+			function(d, i) {
+				return d[0]+offsetX;
+			}).attr("cy", function(d, i) {
+		return svgHeight - d[1]-offsetY;
+	}).attr("r", 5)
+
+	function updateData(data) {
+		var result = data.map(function(d, i) {
+			var x = Math.random() * svgWidth;
+			var y = Math.random() * svgHeight;
+			return [ x, y ];
+		})
+		return result;
+	}
+
+	function updateGraph(dataSet) {
+		d3.select("#myGraph").selectAll("*").remove(); //본래 요소 모두 삭제
+		circleElements = d3.select("#myGraph").selectAll("circle")
+				.data(dataSet)
+		circleElements.enter().append("circle") // 데이터의 개수만큼 circle 요소가 추가됨
+		.attr("class", "mark") // CSS클래스 지정
+		.transition()// cx,cy 애니메이션
+		.attr("cx", function(d, i) {
+			return d[0]+offsetX; // x좌표를 설정
+		}).attr("cy", function(d, i) {
+			return svgHeight - d[1]-offsetY; // y좌표를 설정
+
+		}).attr("r", 5) // 반지름을 지정
+	}
+
+	function drawScale() {
+		d3.select("#myGraph").selectAll("g").remove();
+		var maxX = d3.max(dataSet, function(d, i) {
+			return d[0]; //X 좌표값
+		});
+		var maxY = d3.max(dataSet, function(d, i) {
+			return d[1]; //Y 좌표값
+		})
+		
+		//세로 눈금을 표시하고자 D3 스케일을 지정
+		var yScale = d3.scaleLinear()
+						.domain([0, maxY])
+						.range([maxY, 0])
+						
+		var axis = d3.axisLeft(yScale);
+		  //눈금 표시
+		d3.select("#myGraph") // SVG 요소를 지정
+		  .append("g") //g요소 추가, 이것이 눈금을 표시하는 요소가 됨
+		  .attr("class", "axis") //CSS
+		  .attr("transform", "translate("+offsetX+", "+(svgHeight-maxY-offsetY)+")")
+		  .call(axis)
+		  //가로 눈금을 표시하고나 D3스케일 설정
+		 var xScale = d3.scaleLinear() //스케일 설정
+		 				.domain([0, maxX]) //원래 데이터 범위
+		 				.range([0, maxX]) // 실제 표시 크기
+		 				
+		var bottomAxis=d3.axisBottom(xScale)// 눈금 표시
+		
+		d3.select("#myGraph")
+		  .append("g")
+		   .attr("class", "axis")
+		  .attr("transform", "translate("+offsetX+", "+(svgHeight-offsetY)+")")
+		  .call(bottomAxis)
+		  
+		  
+		 var grid = svg.append("g")
+		 //가로 방향과 세로 방향의 그리드 간격 자동 생성
+		 
+		 var rangeX = d3.range(50, maxX, 50);
+		var rangeY = d3.range(20, maxY, 20);
+		//세로 방향 그리드 생성
+		
+		grid.selectAll("line.y") // line요소의 y 클래스를 선택
+			.data(rangeY) //세로 방향의 범위를 데이터셋으로 설정
+			.enter()
+			.append("line") //line 요소 추가
+			.attr("class", "grid") //css 클래스의 grid를 지정
+			// (x1, y1)- (x2, y2) 의 좌표값을 설정
+			.attr("x1", offsetX)
+			.attr("y1", function(d, i){
+				return svgHeight - d - offsetY;
+			})
+			.attr("x2", maxX + offsetX)
+			.attr("y2", function(d, i){
+				return svgHeight - d - offsetY;
+			})
+			// 가로 방향의 그리드 생성
+			grid.selectAll("line.x") // line요소의 x 클래스를 선택
+				.data(rangeX) // 가로 방향의 범위를 데이터셋으로 설정
+				.enter()
+				.append("line") // line 요소 추가
+				.attr("class", "grid") // css 클래스의 grid를 지정
+		
+			.attr("x1", function(d, i){
+				return d + offsetX;
+			})
+			.attr("y1", svgHeight + offsetY)
+			.attr("x2", function(d, i){
+				return d + offsetX;
+			})
+			.attr("y2", svgHeight - offsetY - maxY)
+	}// drawScale()
+	
+	//눈금 표시
+	drawScale();
+	
+	var tooltip = d3.select("body")
+		.append("div")
+		.attr("class", "tip")
+		
+	function showTooltip(){
+		circleElements= d3.select("#myGraph")
+							.selectAll("circle")
+		circleElements.on("mouseover", function(d){
+			var x = parseInt(d[0]); //원의 x 좌표값
+			var y = parseInt(d[1]);// 원의 y 좌표값
+			var data = d3.select(this).datum(); //요소의 데이터를 읽어옴
+			var dx = parseInt(data[0]); //원의 x좌표. 변수 x와 같은 값
+			var dy = parseInt(data[1]);//원의 y좌표. 변수 y와 같은 값
+			tooltip
+				.style("left", offsetX + x + "px")
+				.style("top", svgHeight + offsetY - y +"px")
+				.style("visibility", "visible") //풍선 도움말을 표시
+				.text(dx+", "+dy)
+		})
+		circleElements.on("mouseout", function(){
+			tooltip.style("visibility", "hidden") // 풍선 도움말을 숨김
+		})
+	}
+	showTooltip()
+
+	//타이머를 사용하여 2초마다 단위를 변화시킴
+	setInterval(function() {
+		dataSet = updateData(dataSet); // 데이터 갱신
+		updateGraph(dataSet); // 그래프 갱신
+		drawScale(); //눈금 그리기, 수정
+		showTooltip();
+	}, 2000);
+}); // addEventListener() end
+
+```
+
+### 3. treemap
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title> D3 v5 hierarchy treemap </title>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
+<script src="./js/treemap1.js"></script>
+		<style>
+		</style>
+</head>
+<body>
+<svg width="800" height="600"></svg>
+</body>
+</html>
+```
+
+```javascript
+window.addEventListener("load", function() {
+var width = document.querySelector("svg").clientWidth;
+var height = document.querySelector("svg").clientHeight;
+var data = {
+		"name": "A",
+		"children":[
+			{"name":"B", "value": 25},
+			{
+				"name":"C",
+				"children":[
+					{"name":"D", "value": 10},
+					{"name":"E", "value": 15},
+					{"name":"F", "value": 10},
+				]
+			},
+			{"name":"G", "value": 15},
+			{
+				"name":"H",
+				"children":[
+					{"name":"I", "value": 20},
+					{"name":"J", "value": 10},
+				]
+			},
+			{"name":"K", "value": 10},
+		]
+};
+
+root=d3.hierarchy(data);
+root
+	.sum(function(d) { return d.value; })
+	.sort(function(a,b) { return b.height - a.height 
+												|| b.value - a.value; });
+
+var treemap = d3.treemap()
+	.size([width, height])
+	.padding(1)
+	.round(true);
+
+treemap(root);
+
+
+var g = d3.select("svg")
+	.selectAll(".node")
+	.data(root.leaves())
+	.enter()
+	.append("g")
+	.attr("class", "node")
+	.attr("transform", function(d) { return "translate("+d.x0+","+(d.y0)+")";});
+	
+	g.append("rect")
+	 .style("width", function(d) { return d.x1 - d.x0 })
+	 .style("height", function(d) { return d.y1 - d.y0;})
+	 .style("fill", function(d){
+		 while(d.depth > 1) d=d.parent;
+		 return d3.schemeCategory10[parseInt(d.value % 7)];
+		 
+	 }) 
+	 .style("opacity", 0.6)
+	 
+	 g.append("text")
+	 	.attr("text-anchor", "start")
+	 	.attr("x", 5)
+	 	.attr("dy", 30)
+	 	.attr("font-size", "150%")
+	 	.attr("class", "node-label")
+	 	.text(function(d) { return d.data.name + " : "+d.value; });
+
+}); // addEventListener() end
+
+```
+
