@@ -551,3 +551,401 @@ var circleElements = d3.select("#myGraph")
 });   // addEventListener() end
 ```
 
+#### 2-2 산포도 표시 - 일정 시간 간격으로 움직이는 애니메이션
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Sample</title>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
+ 
+<script src="./js/plot2.js"></script>
+		<style>
+ svg { width : 380px; height: 240px; border: 1px solid black; }
+ 		.mark { fill: red; stroke: none; }
+</style>
+	</head>
+	<body>
+		<h1> 산포도 표시 - 일정 시간 간격으로 움직이는 애니메이션</h1>
+		<svg id="myGraph"></svg>
+		 
+	</body>
+</html>
+
+```
+
+```javascript
+window.addEventListener("load",function(){
+var svgWidth =320;   //SVG요소의 넓이
+var svgHeight =240;   //SVG요소의 높이
+
+var dataSet = [
+	[30,40], [120, 115], [125, 90], [150, 160], [300, 190],
+	[60, 40], [140, 145], [165, 110], [200, 170],[250, 190]
+];
+
+//산포도 그리기
+var circleElements = d3.select("#myGraph")
+		.selectAll("circle")
+		.data(dataSet)
+		.enter()
+		.append("circle") //데이터의 개수만큼 circle 요소가 추가됨
+		.attr("class", "mark") // CSS 클래스 지정
+		.attr("cx", function(d, i){
+			return d[0]; // 최초 요소를 X 좌표로 함
+		})
+		.attr("cy", function(d, i){
+			return svgHeight-d[1] // 2번째의 요소를 Y 좌표로 함
+		})
+		.attr("r", 5) //반지름을 지정
+
+		
+		function updateData(data){
+	var result = data.map(function(d, i){
+		var x = Math.random() * svgWidth;
+		var y = Math.random() * svgHeight;
+		return [x, y];
+	})
+	return result;
+}
+
+function updateGraph(dataSet){
+	d3.select("#myGraph").selectAll("*").remove();
+	circleElements = d3.select("#myGraph")
+						.selectAll("circle")
+						.data(dataSet)
+	circleElements.enter()
+	.append("circle") //데이터의 개수만큼 circle 요소가 추가됨
+	.attr("class", "mark") // CSS클래스 지정
+	.transition()// cx,cy 애니메이션
+	.attr("cx", function(d, i){
+		return d[0]; //x좌표를 설정
+	})
+	.attr("cy", function(d, i){
+		return svgHeight-d[1]; //y좌표를 설정
+		
+	})
+	.attr("r", 5) //반지름을 지정
+}
+// 타이머를 사용하여 2초마다 단위를 변화시킴
+setInterval(function(){
+	dataSet = updateData(dataSet); //데이터 갱신
+	updateGraph(dataSet); //그래프 갱신
+}, 2000);
+ 
+});   // addEventListener() end
+```
+
+#### 2-3 산포도 표시 - 일정 시간 간격으로 움직이는 애니메이션(눈금 표시)
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Sample</title>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
+ 
+<script src="./js/plot3.js"></script>
+		<style>
+ svg { width : 380px; height: 240px; border: 1px solid black; }
+ 		.mark { fill: red; stroke: none; }
+ 		.axis text{
+ 		font-family: sans-serif;
+ 		font-size: 11px;
+ 		}
+ 		.axis path,
+ 		.axis line {
+ 		fill: none;
+ 		stroke: black;
+ 		}
+</style>
+	</head>
+	<body>
+		<h1> 산포도 표시 - 일정 시간 간격으로 움직이는 애니메이션</h1>
+		<svg id="myGraph"></svg>
+		 
+	</body>
+</html>
+
+```
+
+```javascript
+window.addEventListener("load", function() {
+	var svgWidth = 320; // SVG요소의 넓이
+	var svgHeight = 240; // SVG요소의 높이
+	var offsetX = 30;	// X 
+	var offsetY = 20;	// Y 
+
+	var dataSet = [
+		[ 30, 40 ], [ 120, 115 ], [ 125, 90 ], [ 150, 160 ],
+			[ 300, 190 ], [ 60, 40 ], [ 140, 145 ], [ 165, 110 ], [ 200, 170 ],
+			[ 250, 190 ] 
+		];
+
+	// 산포도 그리기
+	var circleElements = d3.select("#myGraph").selectAll("circle")
+			.data(dataSet)
+
+	circleElements.enter().append("circle").attr("class", "mark").attr("cx",
+			function(d, i) {
+				return d[0]+offsetX;
+			}).attr("cy", function(d, i) {
+		return svgHeight - d[1]-offsetY;
+	}).attr("r", 5)
+
+	function updateData(data) {
+		var result = data.map(function(d, i) {
+			var x = Math.random() * svgWidth;
+			var y = Math.random() * svgHeight;
+			return [ x, y ];
+		})
+		return result;
+	}
+
+	function updateGraph(dataSet) {
+		d3.select("#myGraph").selectAll("*").remove();
+		circleElements = d3.select("#myGraph").selectAll("circle")
+				.data(dataSet)
+		circleElements.enter().append("circle") // 데이터의 개수만큼 circle 요소가 추가됨
+		.attr("class", "mark") // CSS클래스 지정
+		.transition()// cx,cy 애니메이션
+		.attr("cx", function(d, i) {
+			return d[0]+offsetX; // x좌표를 설정
+		}).attr("cy", function(d, i) {
+			return svgHeight - d[1]-offsetY; // y좌표를 설정
+
+		}).attr("r", 5) // 반지름을 지정
+	}
+
+	function drawScale() {
+		d3.select("#myGraph").selectAll("g").remove();
+		var maxX = d3.max(dataSet, function(d, i) {
+			return d[0]; //X 좌표값
+		});
+		var maxY = d3.max(dataSet, function(d, i) {
+			return d[1]; //Y 좌표값
+		})
+		
+		//세로 눈금을 표시하고자 D3 스케일을 지정
+		var yScale = d3.scaleLinear()
+						.domain([0, maxY])
+						.range([maxY, 0])
+						
+		var axis = d3.axisLeft(yScale);
+		  //눈금 표시
+		d3.select("#myGraph") // SVG 요소를 지정
+		  .append("g") //g요소 추가, 이것이 눈금을 표시하는 요소가 됨
+		  .attr("class", "axis") //CSS
+		  .attr("transform", "translate("+offsetX+", "+(svgHeight-maxY-offsetY)+")")
+		  .call(axis)
+		  //가로 눈금을 표시하고나 D3스케일 설정
+		 var xScale = d3.scaleLinear() //스케일 설정
+		 				.domain([0, maxX]) //원래 데이터 범위
+		 				.range([0, maxX]) // 실제 표시 크기
+		 				
+		var bottomAxis=d3.axisBottom(xScale)// 눈금 표시
+		
+		d3.select("#myGraph")
+		  .append("g")
+		   .attr("class", "axis")
+		  .attr("transform", "translate("+offsetX+", "+(svgHeight-offsetY)+")")
+		  .call(bottomAxis)
+	}// drawScale()
+	
+	//눈금 표시
+	drawScale();
+
+	//타이머를 사용하여 2초마다 단위를 변화시킴
+	setInterval(function() {
+		dataSet = updateData(dataSet); // 데이터 갱신
+		updateGraph(dataSet); // 그래프 갱신
+		drawScale(dataSet); //눈금 그리기, 수정
+	}, 2000);
+}); // addEventListener() end
+
+```
+
+#### 2-4 산포도 표시 - 애니메이션+그리드 표현
+
+```html
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Sample</title>
+<script src="https://d3js.org/d3.v5.min.js"></script>
+
+ 
+<script src="./js/plot4.js"></script>
+		<style>
+ svg { width : 380px; height: 240px; border: 1px solid black; }
+ 		.mark { fill: red; stroke: none; }
+ 		.axis text{
+ 		font-family: sans-serif;
+ 		font-size: 11px;
+ 		}
+ 		.axis path,
+ 		.axis line {
+ 		fill: none;
+ 		stroke: black;
+ 		}
+ 		.grid {
+ 		stroke: gray;
+ 		stroke-dasharray : 4, 2;
+ 		shape-rendering : crispEdges;
+ 		}
+</style>
+	</head>
+	<body>
+		<h1> 산포도 표시 - 애니메이션+그리드 표현</h1>
+		<svg id="myGraph"></svg>
+		 
+	</body>
+</html>
+
+```
+
+```javascript
+window.addEventListener("load", function() {
+	var svgWidth = 320; // SVG요소의 넓이
+	var svgHeight = 240; // SVG요소의 높이
+	var offsetX = 30;	// X 좌표의 오프셋
+	var offsetY = 20;	// Y 좌표의 오프셋
+	var svg = d3.select("#myGraph");
+
+	var dataSet = [
+		[ 30, 40 ], [ 120, 115 ], [ 125, 90 ], [ 150, 160 ],
+			[ 300, 190 ], [ 60, 40 ], [ 140, 145 ], [ 165, 110 ], [ 200, 170 ],
+			[ 250, 190 ] 
+		];
+
+	// 산포도 그리기
+	var circleElements = svg.selectAll("circle").data(dataSet)
+
+	circleElements.enter()
+	.append("circle")
+	.attr("class", "mark")
+	.attr("cx",
+			function(d, i) {
+				return d[0]+offsetX;
+			}).attr("cy", function(d, i) {
+		return svgHeight - d[1]-offsetY;
+	}).attr("r", 5)
+
+	function updateData(data) {
+		var result = data.map(function(d, i) {
+			var x = Math.random() * svgWidth;
+			var y = Math.random() * svgHeight;
+			return [ x, y ];
+		})
+		return result;
+	}
+
+	function updateGraph(dataSet) {
+		d3.select("#myGraph").selectAll("*").remove(); //본래 요소 모두 삭제
+		circleElements = d3.select("#myGraph").selectAll("circle")
+				.data(dataSet)
+		circleElements.enter().append("circle") // 데이터의 개수만큼 circle 요소가 추가됨
+		.attr("class", "mark") // CSS클래스 지정
+		.transition()// cx,cy 애니메이션
+		.attr("cx", function(d, i) {
+			return d[0]+offsetX; // x좌표를 설정
+		}).attr("cy", function(d, i) {
+			return svgHeight - d[1]-offsetY; // y좌표를 설정
+
+		}).attr("r", 5) // 반지름을 지정
+	}
+
+	function drawScale() {
+		d3.select("#myGraph").selectAll("g").remove();
+		var maxX = d3.max(dataSet, function(d, i) {
+			return d[0]; //X 좌표값
+		});
+		var maxY = d3.max(dataSet, function(d, i) {
+			return d[1]; //Y 좌표값
+		})
+		
+		//세로 눈금을 표시하고자 D3 스케일을 지정
+		var yScale = d3.scaleLinear()
+						.domain([0, maxY])
+						.range([maxY, 0])
+						
+		var axis = d3.axisLeft(yScale);
+		  //눈금 표시
+		d3.select("#myGraph") // SVG 요소를 지정
+		  .append("g") //g요소 추가, 이것이 눈금을 표시하는 요소가 됨
+		  .attr("class", "axis") //CSS
+		  .attr("transform", "translate("+offsetX+", "+(svgHeight-maxY-offsetY)+")")
+		  .call(axis)
+		  //가로 눈금을 표시하고나 D3스케일 설정
+		 var xScale = d3.scaleLinear() //스케일 설정
+		 				.domain([0, maxX]) //원래 데이터 범위
+		 				.range([0, maxX]) // 실제 표시 크기
+		 				
+		var bottomAxis=d3.axisBottom(xScale)// 눈금 표시
+		
+		d3.select("#myGraph")
+		  .append("g")
+		   .attr("class", "axis")
+		  .attr("transform", "translate("+offsetX+", "+(svgHeight-offsetY)+")")
+		  .call(bottomAxis)
+		  
+		  
+		 var grid = svg.append("g")
+		 //가로 방향과 세로 방향의 그리드 간격 자동 생성
+		 
+		 var rangeX = d3.range(50, maxX, 50);
+		var rangeY = d3.range(20, maxY, 20);
+		//세로 방향 그리드 생성
+		
+		grid.selectAll("line.y") // line요소의 y 클래스를 선택
+			.data(rangeY) //세로 방향의 범위를 데이터셋으로 설정
+			.enter()
+			.append("line") //line 요소 추가
+			.attr("class", "grid") //css 클래스의 grid를 지정
+			// (x1, y1)- (x2, y2) 의 좌표값을 설정
+			.attr("x1", offsetX)
+			.attr("y1", function(d, i){
+				return svgHeight - d - offsetY;
+			})
+			.attr("x2", maxX + offsetX)
+			.attr("y2", function(d, i){
+				return svgHeight - d - offsetY;
+			})
+			// 가로 방향의 그리드 생성
+			grid.selectAll("line.x") // line요소의 x 클래스를 선택
+				.data(rangeX) // 가로 방향의 범위를 데이터셋으로 설정
+				.enter()
+				.append("line") // line 요소 추가
+				.attr("class", "grid") // css 클래스의 grid를 지정
+		
+			.attr("x1", function(d, i){
+				return d + offsetX;
+			})
+			.attr("y1", svgHeight + offsetY)
+			.attr("x2", function(d, i){
+				return d + offsetX;
+			})
+			.attr("y2", svgHeight - offsetY - maxY)
+	}// drawScale()
+	
+	//눈금 표시
+	drawScale();
+
+	//타이머를 사용하여 2초마다 단위를 변화시킴
+	setInterval(function() {
+		dataSet = updateData(dataSet); // 데이터 갱신
+		updateGraph(dataSet); // 그래프 갱신
+		drawScale(dataSet); //눈금 그리기, 수정
+	}, 2000);
+}); // addEventListener() end
+
+```
+
+#### 2-5 산포도 표시 -풍선도움말
+
