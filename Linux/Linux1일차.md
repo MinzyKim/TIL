@@ -186,3 +186,74 @@
 
 - vi 편집기 사용 중 셸 명령을 실행시키기 위해 vi 편집기를 빠져나오려면 명령 모드에서 :sh 한 후에 셸 명령어 수행하고, vi 편집기로 돌아오려면 exit
 
+
+
+```
+[hadoop@localhost ~]$ pwd
+[hadoop@localhost ~]$ cd /                  #절대 경로 사용 경로 변경
+[hadoop@localhost /]$ pwd
+[hadoop@localhost /]$ cd /home/hadoop      #절대 경로 사용 경로 변경
+[hadoop@localhost ~]$ pwd
+[hadoop@localhost ~]$ cd /boot             #절대 경로 사용 경로 변경
+[hadoop@localhost boot]$ pwd
+[hadoop@localhost boot]$ cd /home/hadoop   #절대 경로 사용 경로 변경
+[hadoop@localhost ~]$ cd ../../            #상대 경로 사용 경로 변경
+[hadoop@localhost /]$ pwd
+[hadoop@localhost /]$ cd ./home/hadoop    #상대 경로 사용 경로 변경
+[hadoop@localhost ~]$ pwd
+
+
+[hadoop@localhost ~]$ cd ../../            #상대 경로 사용 경로 변경
+[hadoop@localhost /]$ pwd
+[hadoop@localhost /]$ cd ~                 #~는사용자 홈디렉토리로 이동
+[hadoop@localhost ~]$ pwd 
+[hadoop@localhost ~]$ ls -l
+[hadoop@localhost ~]$ ls -d
+[hadoop@localhost ~]$ ls -R
+
+[hadoop@localhost ~]$ cd temp
+[hadoop@localhost temp]$ mv text1 data1
+[hadoop@localhost temp]$ ls
+[hadoop@localhost temp]$ mv data1 ./temp2/
+[hadoop@localhost temp]$ ls
+[hadoop@localhost temp]$ ls ../temp2/
+#파일 이동, 이름변경 
+[hadoop@localhost temp]$ mv text2 ./temp2/data2
+[hadoop@localhost temp]$ ls
+[hadoop@localhost temp]$ ls ../temp2/
+
+#쓰기권한 없는 디렉토리 이동 에러 발생
+[hadoop@localhost ~]$ cd ~
+[hadoop@localhost ~]$ mv ./temp2/data2    /etc  
+
+#파일 여러 개를 디렉터리로 이동하기
+[hadoop@localhost ~]$ mv ./temp2/data1 ./temp2/data2 .
+[hadoop@localhost ~]$ ls ./temp2/
+[hadoop@localhost ~]$ ls 
+
+#디렉터리를 디렉터리로 이동하기(기존에 있던 디렉터리가 아닐 경우에는 디렉터리명이 변경)
+[hadoop@localhost ~]$ mv ./temp  ./temp3
+[hadoop@localhost ~]$ ls
+
+[hadoop@localhost ~]$ ls ./temp3
+[hadoop@localhost ~]$ ls ./temp2
+[hadoop@localhost ~]$ mv  ./temp2/  ./temp3/
+[hadoop@localhost ~]$ ls ./temp3
+[hadoop@localhost ~]$ ls ./temp3/temp2    #디렉토리가 이동되었으므로
+
+
+#파일 삭제
+[hadoop@localhost ~]$ rm -i temp3/temp2/data2
+[hadoop@localhost ~]$ ls ./temp3/temp2
+#디렉토리 삭제
+[hadoop@localhost ~]$ rm -r temp3/temp2 
+[hadoop@localhost ~]$ ls ./temp3 
+
+
+[hadoop@localhost ~]$ cp /etc/hosts   temp/data1
+[hadoop@localhost ~]$ ls temp
+[hadoop@localhost ~]$ ln temp/data1   temp/data1.ln
+[hadoop@localhost ~]$ ls temp/
+[hadoop@localhost ~]$ ls -i temp/   #data1파일과 data1.ln 의 inode비교
+```
+
