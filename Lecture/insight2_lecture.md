@@ -24,5 +24,22 @@
 - y=ax+b 기울기와 절편을 구하시오
   - parameter learning
   - weighted sum -> 기울기만 구하면 됨
-  - 
+
+### SVM(Support Vector Machine)
+
+- 성능이 좋은데, 시간이 오래걸리고 알고리즘이 어려워서 Deep learning에게 밀림
+- 함수이용분류(Clessification via Mathoematical functions) - 차원을 늘려준다.
+- 얼마나 많이 - 회귀분석
+
+
+
+### Linear Regression
+
+***기울기 찾기**
+
+- 추세를 볼 때 사용
+- 분류 문제인가 회귀 분석인가 목적을 바로 할 것
+  - 분류의 직선은 위 아래의 성향을 나눠주는 것
+  - 회귀 분석은 추세를 분석하는 것
+- 
 
