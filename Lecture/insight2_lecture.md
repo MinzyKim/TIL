@@ -10,6 +10,19 @@
 
 - Linear Clessifier
 
-- 
+- 1세대 - 30년
+
+- Occamz Razor
+
+  ```
+  오컴의 면도날(Occam's Razor 또는 Ockham's Razor)은 흔히 '경제성의 원리' (Principle of economy), 검약의 원리(lex parsimoniae), 또는 단순성의 원리
+  어떤 현상을 설명할 때 불필요한 가정을 해서는 안 된다는 것이다. 좀 더 쉬운 말로 번역하자면, '같은 현상을 설명하는 두 개의 주장이 있다면, 간단한 쪽을 선택하라(given two equally accurate theories, choose the one that is less complex)'는 뜻
+  ```
 
   
+
+- y=ax+b 기울기와 절편을 구하시오
+  - parameter learning
+  - weighted sum -> 기울기만 구하면 됨
+  - 
+
