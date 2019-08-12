@@ -47,4 +47,14 @@
 ### Logistic Regression
 
 - 회귀 분석이지만 분류를 이용함
-- 
+- 확률을 구하면 분류까지 되서 1타 쌍피
+
+
+
+### Single Layer Perceptron
+
+- perceptron을 가지고 있는 모든 알고리즘은 2진 분류다.
+- -∞~∞
+- Threshold를 정해놓고 거기를 넘으면 무조건 1, 아니면 0
+- input layer, out layer 2가지가 존재
+- 가중치라는 말이 들어가는 애들은 기울기에 임의값을 넣고 계산
