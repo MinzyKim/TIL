@@ -33,6 +33,8 @@ client가 요청 -> 프로그램 시작 -> 어플리케이션이 n개의 host에
 
 - 장애 허용과 복구 능력을 위해 sharding, replication을 수행한다.
 
+- 배치 처리, 파일 기반 처리(map의 처리 결과도 map처리된 datanode에 파일로 저장, reducer의 출력결과도 HDFS에 저장, disk기반, stream기반, sequenctial하게 처리)
+
   
 
 ### 3. 하둡의 노드
@@ -56,13 +58,21 @@ client가 요청 -> 프로그램 시작 -> 어플리케이션이 n개의 host에
 
 - HDFS는 HDFS의 스토리지를 관리
   - NameNode 
-    -  HDFS 파일 시스템 디렉토리 트리와 파일의 위치등 HDFS 스토리지 관련 메타 정보를 관리
+    -  HDFS 파일 시스템 디렉토리 트리와 파일의 위치등 HDFS 스토리지 관련 메타 정보(블럭 데이터를 데이터노드에 매핑)를 관리
+    - 파일, 디렉토리, 생성, 열기, 쓰기 오퍼레이션 수행
+    - 어떤 데이터 노드에 복제되고, 복제 후에 삭제할지 결정
+    - 데이터 노드에서 보내온 하트비트와 블럭 리포트를 처리 (블럭 위치 유지, 데이터 노드의 상태 관리)
   - SecondaryName 
     - HDFS 스토리지 메타 정보 업데이트(기본 1시간 간격, fsimage파일과 editlog파일을 병합)
   - DataNode
     - 마스터 노드에 접속 유지, 3초 간격으로 heart beat를 보낸다.
     - block report를 주기적으로 전송
     - 마스터 노드의 요청을 처리(block저장, block 삭제)
+    - 로컬 파일 시스템에 블록을 저장
+    - 데이터에 대한 읽기, 쓰기 수행
+    - 데이터 블록 생성 및 삭제 수행
+    - 클러스터에 데이터 블럭 복제
+    - 주기적으로 heartbeat와 블럭 리포트 전송
 - Yarn 서비스
   - resource manager - 마스터 노드에서 실행, 클러스터의 리소스를 나눠주는 역할, Task들에 대한 스케줄링
   - node manager - 워크 노드에서 실행, Task들을 실행시키고 관리, resouurce manager와 관계 유지, Task의 상태, 노드 상태 관리
