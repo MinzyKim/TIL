@@ -557,7 +557,7 @@ public class ReducesideJoin extends Configured implements Tool {
   mysql> use mysql
   mysql> show tables;
   mysql> select user from user;
-  
+  mysql> flush priviliges;
   
   # /usr/local/hive/conf/hive-site.xml을 수정
   [hadoop@master ~]$ vi /usr/local/hive/conf/hive-site.xml
