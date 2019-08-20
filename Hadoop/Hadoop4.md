@@ -540,6 +540,60 @@ public class ReducesideJoin extends Configured implements Tool {
   
   [root@master ~]# mysql --version
   [root@master ~]# netstat -anp | grep mysql
+  
+  [root@master ~]# systemctl mysql start 
+  #루트 사용자의 암호를 설정한다.
+   
+  mysql> grant all privileges on *.* to hive@localhost identified by 'hive' with grant option  
+   
+  위 명령어의 hiveid 는 사용자 아이디이며, hivepass 는 사용자 패스워드이다.
+  다음으로 metastore로 사용할 db를 생성한다.
+  기존 db를 사용하려면 안해도 무방하다.
+   
+  mysql> create database hive; 
+  
+  mysql> grant all privileges on *.* to hive@localhost identified by 'hive' with grant option  
+  mysql> show databases;
+  mysql> use mysql
+  mysql> show tables;
+  mysql> select user from user;
+  
+  
+  # /usr/local/hive/conf/hive-site.xml을 수정
+  [hadoop@master ~]$ vi /usr/local/hive/conf/hive-site.xml
+  
+  <?xml version="1.0"?>
+  <?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+  <configuration>
+  <property>
+    <name>hive.metastore.local</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionURL</name>
+    <value>jdbc:mysql://localhost:3306/metastore_db?createDatabaseIfNotExist=true</value>
+    <description>JDBC connect string for a JDBC metastore</description>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionDriverName</name>
+    <value>com.mysql.jdbc.Driver</value>
+    <description>Driver class name for a JDBC metastore</description>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionUserName</name>
+    <value>hive</value>
+    <description>username to use against metastore database</description>
+  </property>
+  
+  <property>
+    <name>javax.jdo.option.ConnectionPassword</name>
+    <value>hive</value>
+    <description>password to use against metastore database</description>
+  </property> 
+    </configuration>
+  
+  
   ```
 
   
+
