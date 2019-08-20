@@ -505,3 +505,41 @@ public class ReducesideJoin extends Configured implements Tool {
   - 파티션 내의 모든 데이터가 필요 없어지면, 파티션 단위로 삭제할 수 있어서 관리도 수월하다
   - HiveQL의 흐름은 Hive에서 쿼리문 앞에 EXPLAIN을 붙여 실행하면 확인할 수 있다
   - HiveSQ은 Stage라는 단위로 MapReduce나 부속 처리로 변환되어, Stage 간 의존 관계가 생성된다
+
+#### 5.1 Hive설치
+
+- https://apache.org/dist/hive/hive-1.2.2/
+
+  ```Linux명령어
+  [root@master local]# tar -xzvf /home/hadoop/Downloads/apache-hive-1.2.2-bin.tar.gz 
+  [root@master local]# chown -R hadoop:hadoop apache-hive-1.2.2-bin/
+  
+  [root@master local]# ln -s apache-hive-1.2.2-bin/  hive
+  [root@master local]# ls -l
+  
+  [root@master local]# chown -R hadoop:hadoop hive
+  [root@master local]# ls -l
+  
+  #마스터에서 hadoop 환경설정 파일 변경
+  [root@master local]# su - hadoop
+  [hadoop@master ~]$ vi .bash_profile
+  
+  export HIVE_HOME=/usr/local/hive
+  export PATH=$PATH:$JAVA_HOME/bin:$HADOOP_HOME/bin:$HIVE_HOME/bin:
+  
+  
+  
+  #마스터 노드에 hive 메타스토어 mysql 구성 (로컬모드)
+  [root@master ~]# rpm -ivh /home/hadoop/Downloads/mysql-community-release-el6-5.noarch.rpm
+  [root@master ~]#  ls -la /etc/yum.repos.d/
+  [root@master ~]# yum install mysql-server
+  
+  [root@master ~]# ls /usr/bin/mysql
+  [root@master ~]# ls /usr/sbin/mysqld
+  [root@master ~]#  service mysqld start
+  
+  [root@master ~]# mysql --version
+  [root@master ~]# netstat -anp | grep mysql
+  ```
+
+  
