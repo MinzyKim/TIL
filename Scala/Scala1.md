@@ -368,6 +368,46 @@ scala> val c = new Circle(2)
 ### 2.8 Trait
 
 - 하나의 완성된 기능이라기보다는 어떠한 객체에 추가될 수 있는 부가적인 하나의 특징
+- 클래스의 부가적인 특성으로 동작, 자체로 인스턴스화는 가능하지 않다.
+
+```scala
+scala> class Car(brand: String)
+
+scala> class Shiny(shineRefraction: Int)
+
+scala> class BMW extends Car {
+    val brand="BMW"
+}
+
+scala> class BMW extends Car, Shiny { //다중상속 nonerror
+    val brand="BMW"
+}
+
+////////////////////////////////////////////////////////////////////////////////////////
+
+scala> trait Car {
+    val brand: String
+}
+
+scala> trait Shiny {
+    val shineRefraction: Int
+}
+
+scala> class BMW extends Car {
+    val brand="BMW"
+}
+
+scala> class BMW extends Car, Shiny { //다중상속 error
+    val brand="BMW"
+}
+
+scala> class BMW extends with Shiny{
+scala> val brand = "BMW"
+scala>  val shineRefraction = 12
+} 
+```
+
+
 
 ## 3. scala 컴파일하기
 
