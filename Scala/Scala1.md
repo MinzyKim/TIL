@@ -571,6 +571,57 @@ val list5 = 2 :: 2 :: 4 :: Nil
 	println(list4.distinct)
 ```
 
+### 2.13 Map
+
+```scala
+val map = Map( "number1" -> "aa",
+             	"number2" -> "bb",
+             	"number3" -> 3,
+             	5 -> "cc")
+
+println(map.isEmpty)
+println("whole map : " + map)
+println("keys : " + map.keys)
+println("values : " + map.values)
+println(map("number1"))
+
+map+("num4" => 44)
+println(map)
+val map2 = Map("n1" -> 100, "n2" -> 200)
+map ++ map2
+println(map)
+map - (num4)
+println(map)
+```
+
+### 2.14 집합(Set)
+
+```scala
+var basket: Set[String] = Set()
+basket += "딸기"
+basket += "포도"
+basket += "포도"
+basket += "사과"
+basket += "포도"
+basket += "바나나"
+basket += "체리"
+
+println(basket)
+```
+
+- 중복된 요소는 하나만 저장된다.
+
+```scala
+var basket2 : Set[String] = Set()
+basket2 += "토마토"
+basket2 += "당근"
+basket2 += "감자"
+basket2 += "사과"
+
+println(basket.diff(basket2))
+println(basket|basket2) // | 결합문자
+```
+
 
 
 ## 3. scala 컴파일하기
