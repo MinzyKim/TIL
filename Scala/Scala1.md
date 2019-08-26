@@ -368,7 +368,7 @@ scala> val c = new Circle(2)
 ### 2.8 Trait
 
 - 하나의 완성된 기능이라기보다는 어떠한 객체에 추가될 수 있는 부가적인 하나의 특징
-- 클래스의 부가적인 특성으로 동작, 자체로 인스턴스화는 가능하지 않다.
+- 클래스의 부가적인 특성으로 동작, 자체로 인스턴스화는 가능하지 않다
 
 ```scala
 scala> class Car(brand: String)
@@ -406,6 +406,133 @@ scala> val brand = "BMW"
 scala>  val shineRefraction = 12
 } 
 ```
+
+- 추상클래스 대신 trait을 사용해야 하는 이유
+  - 추상클래스와 다르게 다중상속 가능
+  - 동일한 메서드를 지닌 트레이트가 모두 상속이 되어 충돌이 발생했을 때, 구현 방식에 따라 한가지를 선택하거나 트레이트 쌓기를 통해 동일 이름의 메서드들의 우선순위를 결정해 쌓아두고 하나씩 실행하기도 함
+
+
+
+```scala
+abstract class Robot {
+    def shoot="뿅뿅"
+}
+
+trait M16 extends Robot {
+    override def shoot = "빵야"
+}
+
+trait Bazooka extends Robot {
+    override def shoot="뿌왕뿌왕"
+}
+
+trait Daepodong extends Robot {
+    override def shoot = "콰르르르릉"
+}
+
+class Mazinga extends Robot with M16 with Bazooka with Daepodong
+val robot = new Mazinga
+println(robot.shoot)
+```
+
+- 최종적으로 상속받는 메소드가 수행되도록 함
+
+
+
+```scala
+abstract class AnotherRobot {
+    def shoot="뿅뿅"
+}
+
+trait AnotherM16 extends AnotherRobot {
+    override def shoot = super.shoot + "빵야"
+}
+
+trait AnotherBazooka extends AnotherRobot {
+    override def shoot = super.shoot + "뿌왕뿌왕"
+}
+
+trait AnotherDaepodong extends AnotherRobot {
+    override def shoot = super.shoot + "콰르르르릉"
+}
+
+class SuperMazinga extends AnotherRobot with AnotherM16 with AnotherBazooka with AnotherDaepodong
+
+val robot = new SuperMazinga
+println(robot.shoot)
+```
+
+### 2.9 Any
+
+```scala
+def matchFunction(input: Any): Any = input match {
+    case 100 => "hundred"
+    case "hundred" => 100
+    case etcNumber: Int => "입력값은 100이 아닌 int형 정수입니다."
+    case _ => "기타"
+}
+
+println(matchFunction(100))
+println(matchFunction("hundred"))
+println(matchFunction(1000))
+println(matchFunction(1000.5))
+println(matchFunction("thousand"))
+```
+
+
+
+```scala
+case class Person(name: String, age: Int)
+val alice = new Person("Alice", 25)
+val bob = new Person("Bob", 32)
+val charlie = new Person("Charlie", 32)
+
+for(person <- List(alice, bob, charlie)){
+    person match {
+        case Person("Alice", 25) => println("Hi Alice!")
+        case Person("bob", 32) => println("Hi Bob!")
+        case Person(name, age) => println("Age:"+age+" year, name: "+name + "?")
+    }
+}
+```
+
+### 2.10 Extractor로 패턴 매칭
+
+```scala
+object Emergency{
+    def unapply(number: String): Boolean = {
+        if (number.length == 3 && number.forall(_.isDigit)) true
+        else false
+    }
+}
+
+object Normal {
+    def unapply(number: String): Option[Int] = {
+        try {
+            var o = number.replaceAll("-", "")
+            Some(number.replaceAll("-","").toInt)
+        }catch{
+            case _: Throwable => None
+        }
+    }
+}
+```
+
+```scala
+val number1 = "010-222-2222"
+val number2 = "119"
+val number3 = "포도 먹은 돼지"
+val numberList = List(number1, number2, number3)
+for(number <- numberList){
+    number match {
+        case Emergency() => println("긴급전화입니다.")
+        case Normal(number) => println("일반전화입니다 -"+number)
+        case _ => println("판단 할 수 없습니다.")
+    }
+}
+```
+
+### 2.11 컬렉션
 
 
 
