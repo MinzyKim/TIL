@@ -822,6 +822,24 @@ object Ex {
 
 
 
+### 2.23 Either
+
+```scala
+object Ex {
+    def main(args: Array[String]): Unit = {
+        val input = scala.io.StdIn.readLine("값을 입력하세요:")
+        val result: Either[String, Int] = try {
+            	Right(input.toInt)
+        } catch {
+            case e : Exception => Left(input)
+        }
+        print(result.getClass)
+    }
+}
+```
+
+
+
 ## 3. scala 컴파일
 
 - 함수를 사용할 때, 컴파일 후 호출이 필요하다.
