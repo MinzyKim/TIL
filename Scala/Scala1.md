@@ -1,4 +1,4 @@
-# Scala
+# *Scala
 
 ## 1. 특성
 
@@ -622,8 +622,78 @@ println(basket.diff(basket2))
 println(basket|basket2) // | 결합문자
 ```
 
+### 2.15 튜플(Tuple)
+
+- 여러 데이터를 하나의 묶음으로 처리하고 싶을 때 튜플로 처리
+- 튜플은 N개의 데이터 쌍을 저장하는 자료 구조
+
+```scala
+val t1 = (1,2) // 튜플 생성
+val t2 = ("a", 1, "c")
+val n1 = t1._2 //튜플 내용 참조
+val n2 = t2._3
+```
 
 
-## 3. scala 컴파일하기
+
+### 2.16 옵션
+
+```scala
+val students = Map(
+1 -> "문진한",
+2 -> "엄다솔",
+3 -> "노순표"
+)
+val one = students.get(1)
+val four = students.get(4)
+
+println(one)
+println(four)
+println(one.get)
+println(four.getOrElse("값이 없습니다."))
+```
+
+
+
+### 2.17 시퀀스
+
+- 내부적으로 인덱스에 대한 정보를 가지고 있으므로 인덱스와 관련해서 써야 할 기능이 많을 경우 쉽게 데이터를 다룰 수 있다.
+
+```scala
+val donuts: Seq[String] = Seq("Plain Donut",
+                             	"Strawberry Donut",
+                             	"Glazed Donut")
+println(s"Elements of donuts = $donuts")
+```
+
+
+
+### 2.18 패키지 객체(Package Object) 
+
+- 스칼라에는 패키지에 변수나 클래스 등을 선언할 수 있음
+  - 패키지 객체를 이용하면 Common과 같은 클래스를 정의하지 않고도 동일 패키지에서 사용하는 변수나 메서드 등을 공유할 수 있음
+
+
+
+### 2.19 Generic타입
+
+- 자바는 < > / scala는 Array[  ] 선언
+
+
+
+### 2.20 함수 컴비네이터(combinator)
+
+- 구현된 로직에 따라 컬렉션을 변형한 후 동일한 자료형의 컬렉션을 반환하는 역할을 맡는 메서드
+
+```scala
+val o = List(1,2,3,4)
+println(o)
+val n = o.map(i => i*10)
+println(n)
+```
+
+
+
+## 3. scala 컴파일
 
 ![1566785024248](C:\Users\student\AppData\Roaming\Typora\typora-user-images\1566785024248.png)
