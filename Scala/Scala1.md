@@ -1,3 +1,5 @@
+
+
 # *Scala
 
 ## 1. 특성
@@ -692,8 +694,136 @@ val n = o.map(i => i*10)
 println(n)
 ```
 
+```scala
+val o = List(1,2,3,4)
+val sum = o.foldLeft(0.0)(_ + _)
+println(s"Sum = $sum")
+```
+
+```scala
+val o = List(1,2,3,4)
+val n = o.partition(i => i < 3)
+println(n)
+```
+
+```scala
+val o = List(1,2,3,4)
+val oo = List(5,6,7,8,9)
+val n = o zip oo //1:1 매칭
+val nn = o ::: oo //합쳐줌
+println(n)
+println(nn)
+```
+
+```scala
+val o = List(1,2,3,4)
+
+val n = o.find(i => i >= 2)
+val nn = o.find(i => i == 9)
+println(n) //Some
+println(nn) //None
+```
+
+```scala
+val o = List(1,2,3,4,5,6,0)
+
+val n = o.drop(4)
+val nn = o.dropWhile(i => i < 3)
+println(n)
+println(nn)
+```
+
+```scala
+val donuts1: Seq[String] = Seq("Plain", "Strawberry", "Glazed")
+val donuts2: Seq[String] = Seq("Vanila","Glazed")
+val listDonuts: List[Seq[String]] = List(donuts1, donuts2) // List 2개 출력
+val listDonutsFromFlatten: List[String] = listDonuts.flatten //합쳐진 List 출력
+```
+
+
+
+### 2.21 FileReader Error 확인
+
+```scala
+import java.io.FileReader
+import java.io.FileNotFoundException
+import java.io.IOException
+
+object Demo {
+    def main(args: Array[String]){
+        try{
+            val f = new FileReader("input.txt")
+        }catch {
+            case ex: FileNotFoundException => {
+                println("Missing file exception")
+            }
+            case ex: IOException => {
+                println("IO Exception")
+            }
+        }finally {
+            println("Exiting finally...")
+        }
+    }
+}
+
+Missing file exception
+Exiting finally...
+```
+
+- input.txt 파일이 없으므로 에러 메세지 출력
+
+
+
+```scala
+object Demo {
+    def main(args: Array[String]) {
+        print("Please enter your input : ")
+        val line = Console.readLine
+        
+        println("Thanks, you just typed: "+ line)
+    }
+}
+
+import scala.io.Source
+
+object Demo {
+    def main(args: Array[String]) {
+        println("Following is the content read: ")
+        
+        Source.fromFile("Demo.txt").foreach {
+            print
+        }
+	}
+}
+```
+
+
+
+### 2.22 file, directory 만들기
+
+```scala
+import scala.io.StdIn, readLine
+import java.io.File
+import java.io.PrintWriter
+import java.io.Console
+
+object Ex {
+     def main(args: Array[String]): Unit = {
+         val fileName = "test.txt"
+         var input = Console.readLine("파일에 쓸 내용을 입력하세요")
+         
+         val writer = new PrintWriter(new File(fileName))
+         	writer.write(input)
+         writer.close
+         //출력 파일은 패키지 디렉토리에 생성됩니다.
+         print("입력하신 텍스트를 "+ fileName + " 에 저장했습니다.")
+}
+```
+
 
 
 ## 3. scala 컴파일
+
+- 함수를 사용할 때, 컴파일 후 호출이 필요하다.
 
 ![1566785024248](C:\Users\student\AppData\Roaming\Typora\typora-user-images\1566785024248.png)
