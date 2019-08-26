@@ -532,7 +532,44 @@ for(number <- numberList){
 }
 ```
 
-### 2.11 컬렉션
+### 2.11 컬렉션, list객체
+
+```scala
+val list1 = "a" :: "b" :: "c" :: Nil
+	for(x <- 0 until list1.size)
+		println(list1(x))
+
+val list2 = "d" :: "e" :: Nil
+val list0 = list1 ::: list2
+	for(x <- 0 until list0.size)
+		println(list0(x))
+}
+a
+b
+c
+d
+e
+```
+
+### 2.12  List객체 2
+
+```scala
+val list3 = "a" :: "b" :: "c" :: "d" :: Nil
+val list4 = 1 :: 2 :: 3 :: Nil
+val list5 = 2 :: 2 :: 4 :: Nil
+	println(list3 ++ list4)
+	println(list3.apply(0))
+	println(list3.reverse)
+	println(list4.max)
+	println(list4.min)
+	println(list4.sum)
+	println(list4.mkString(","))
+	println(list4.exists(a => 0 > 3))
+	println(list4.exists(_ > 3))
+	println(list4.contains(1))
+	println(list4.isEmpty)
+	println(list4.distinct)
+```
 
 
 
