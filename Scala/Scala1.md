@@ -294,7 +294,80 @@ object Ex5 {
     }
 ```
 
+- 매개변수가 여러개인 함수
 
+```scala
+def printlnStrings(args: String*) = {
+    for(arg <- args){
+        println(arg);
+    }
+    
+}
+	
+printlnStrings("st1", "st2", "st3")
+printlnStrings( )
+```
+
+- 매개변수의 기본값 설정
+
+```scala
+def default(a: Int = 4, b: Int = 5) : Int = a+b
+
+println("기본값은 "+default())
+println("기본값은 "+default(11,6))
+```
+
+- apply
+
+```scala
+class SomeClass {
+    def apply(m: Int) = method(m)
+    def method(i: Int)= {
+        println("method(Int) called")
+        i+i
+    }
+    def method2(s: String) = 5
+}
+
+val something = new SomeClass
+println(something(2))
+```
+
+### 2.6 암묵적 형변환
+
+```scala
+object Sample {
+    def main(args: Array[String]): Unit = {
+        case class Person(name:String)
+        implicit def stringToPerson(name:String) :Person = Person(name)
+        def sayHello(p:Person) : Unit = {
+            print("Hello"+p.name)
+        }
+        sayHello("korea")
+    }
+}
+```
+
+### 2.7 상속과 메소드 Overloading
+
+- 반드시 하위에서 상위 선언
+
+```scala
+scala> abstract class Shape {
+    def getArea(): Int
+}
+
+scala> class Circle(r: Int) extends Shape {
+    def getArea():Int = { r*r*3 }
+}
+
+scala> val s = new Shape //error
+scala> val c = new Circle(2)
+```
+
+### 2.8 Trait
+
+- 하나의 완성된 기능이라기보다는 어떠한 객체에 추가될 수 있는 부가적인 하나의 특징
 
 ## 3. scala 컴파일하기
 
