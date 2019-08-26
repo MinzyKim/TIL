@@ -532,7 +532,7 @@ for(number <- numberList){
 }
 ```
 
-### 2.11 컬렉션, list객체
+### 2.11 컬렉션, List객체
 
 ```scala
 val list1 = "a" :: "b" :: "c" :: Nil
