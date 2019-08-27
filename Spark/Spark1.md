@@ -205,6 +205,15 @@ val rdd = sc.parallelize(Seq((1, "a, b"), (2, "a, c"), (3, "d, e")))
 val result = rdd.flatMapValues( _.split(","))
 println(result.collect.mkString("\t")) 
 
+///////////////////////////////////////////////////////////////////
+val rdd = sc.parallelize( List(("k1", "v1"), ("k2", "v2"), ("k1", "v3") ))
+val rdd2 = sc.parallelize( List(("k1", "v4")))
+val result = rdd.cogroup(rdd2)
+result.collect.foreach {
+   case (k, (v_1, v_2)) => {
+        println(s"($k, [${v_1.mkString(",")}], [${v_2.mkString(", ")}])")
+   }
+}
 
 ```
 
