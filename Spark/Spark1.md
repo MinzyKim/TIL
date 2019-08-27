@@ -140,12 +140,12 @@ println(result.mkString(", "))
 val result2 = rdd.count
 println( result2 )
 
-
+///////////////////////////////////////////////////////////////////
 val rdd = sc.parallelize( 1 to 5 )
 val result = rdd.map( _ + 1 )
 println( result.collect.mkString(", " ) )
 
-
+///////////////////////////////////////////////////////////////////
 val fruits = List( "apple, orange", 
                    "grape, apple, mango", 
                    "blueberry, tomato, oragne")
@@ -154,7 +154,7 @@ val rdd2 = rdd1.flatMap(_.split(","))
 print(rdd2)
 print(rdd2.collect.mkString(", "))
 
-
+///////////////////////////////////////////////////////////////////
 
 val rdd2 = rdd1.flatMap( log => {
   //apple이라는 단어가 포함된 경우만 처리 
@@ -166,7 +166,7 @@ val rdd2 = rdd1.flatMap( log => {
  })
 
 
-
+////////////////////////////////////////////////////////////////////
 val rdd1 = sc.parallelize( 1 to 10, 3)
 val rdd2 = rdd1.mapPartitions(numbers => {
    print("DB 연결 !!!")
@@ -177,7 +177,7 @@ val rdd2 = rdd1.mapPartitions(numbers => {
 println(rdd2.collect.mkString(", "))
 
 
-
+///////////////////////////////////////////////////////////////////
 
 val rdd2 = rdd1.mapPartitionsWithIndex((idx, numbers)  => {
    numbers.flatMap {
@@ -186,5 +186,95 @@ val rdd2 = rdd1.mapPartitionsWithIndex((idx, numbers)  => {
    }
 })
 println(rdd2.collect.mkString(", "))
+
+///////////////////////////////////////////////////////////////////
+val rdd = sc.parallelize(List("a", "b", "c")).map((_, 1))
+val result = rdd.mapValues( i => i+1 )
+println(result.collect.mkString("\t"))
+
+
+///////////////////////////////////////////////////////////////////
+
+val rdd = sc.parallelize(Seq((1, "a, b"), (2, "a, c"), (3, "d, e")))
+val result = rdd.flatMapValues( _.split(","))
+println(result.collect.mkString("\t")) 
+
+///////////////////////////////////////////////////////////////////
+
+val rdd = sc.parallelize(Seq((1, "a, b"), (2, "a, c"), (3, "d, e")))
+val result = rdd.flatMapValues( _.split(","))
+println(result.collect.mkString("\t")) 
+
+
+```
+
+## 3. WordCount실습
+
+```scala
+#스파크 어플리케이션 프로젝트 폴더 생성
+[hadoop@master ~]$ mkdir wordcount-app
+
+[hadoop@master ~]$ cd wordcount-app
+
+# 소스 코드 파일 저장 디렉토리 생성
+[hadoop@master ~]$ mkdir -p src/main/scala  
+#sbt 설정 파일 저장  디렉토리 생성
+[hadoop@master ~]$ mkdir project
+
+# 소스 코드 저장될 패키지 디렉토리 생성
+[hadoop@master ~]$ mkdir -p src/main/scala/lab/spark/example
+[hadoop@master ~]$ cd  src/main/scala/lab/spark/example
+[hadoop@master ~]$ vi WordCount.scala
+
+
+[hadoop@master ~]$ cd ~/wordcount-app
+[hadoop@master ~]$ vi build.sbt
+
+name := "spark-simple-app"
+version := "0.1"
+scalaVersion := "2.11.12"
+libraryDependencies ++= Seq("org.apache.spark" % "spark-core_2.11" % "2.4.3" % "provided")
+assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
+
+
+[hadoop@master ~]$ cd project
+[hadoop@master ~]$ vi plugins.sbt
+
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.10")
+
+
+#어플리케이션 빌드
+[hadoop@master ~]$ cd ~/wordcount-app
+[hadoop@master ~]$ sbt assembly
+
+#데이터 소스 생성
+[hadoop@master ~]$ vi simple-words.txt
+cat
+dog
+.org
+cat
+rabbit
+bear
+cat
+&&
+tiger
+dog
+rabbit
+100
+bear
+tiger
+cat
+rabbit
+?bear
+
+#하둡 파일 시스템에 simple-words.txt파일 업로드
+[hadoop@master ~]$ hadoop fs -mkdir  /data/spark/
+[hadoop@master ~]$ hadoop fs -put simple-words.txt  /data/spark/
+
+[hadoop@master ~]$ spark-submit --master local 
+--class lab.spark.example.WordCount
+--name WordCount  
+~/wordcount-app/target/scala-2.11/wordcount-app-assembly-0.1.jar  
+/data/spark/simple-words.txt
 ```
 
