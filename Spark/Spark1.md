@@ -287,7 +287,7 @@ println(result.collect.mkString(","))
 val rdd = sc.parallelize( List( "a", "b", "b")).map((_, 1))
 val result = rdd.foldByKey(_+_)
 println(result.collect.mkString(","))
-
+//초기값 지정 가능
 
 ////////////////////////////////////////////////////////////////////
 <combineByKey()>
@@ -296,6 +296,8 @@ def  reduceByKey(func: (V, V) => V) : RDD[(K, V)]
 def  foldByKey(zeroValue: V)(func: (V, V) => V) : RDD[(K, V)] 
 combineByKey[C](createCombiner:(V)=>C, mergeValue:(C, V)=>C, mergeCombiners: (C, C) => C):RDD[(K, C)]
 
+////////////////////////////////////////////////////////////////////
+<>
 ```
 
 ## 3. WordCount실습
@@ -368,3 +370,29 @@ rabbit
 /data/spark/simple-words.txt
 ```
 
+## 4. CombineByKey() 실습 - 평균값 계산
+
+```scala
+//콤바이너 역할을 할 Record 클래스 정의
+case class Record(var amount: Long, var number: Long=1){
+   def map(v: Long) = Record(v)
+   def add(amount: Long): Record = {
+      add(map(amount))
+	  }
+   def add(other: Record) : Record = {
+      this.number +=other.number 
+	  this.amount += other.amount
+	  this
+	  }
+   override def toString: String = s"avg:${amount / number}"
+   }
+ //combineByKey()를 이용한 평균값 계산
+ val data = Seq(("Math", 100L), ("Eng", 80L), ("Math", 50L), ("Eng", 60L), ("Eng", 90L))
+ val rdd = sc.parallelize(data)
+ val createCombiner = (v:Long) => Record(v)
+ val mergeValue = (c:Record, v:Long) => c.add(v)
+ val mergeCombiners = (c1:Record, c2:Record) => c1.add(c2)
+ val result = rdd.combineByKey(createCombiner, mergeValue, mergeCombiners)
+ println(result.collect.mkString("\n"))
+
+```
