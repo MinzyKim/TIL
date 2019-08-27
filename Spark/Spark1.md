@@ -214,6 +214,13 @@ result.collect.foreach {
         println(s"($k, [${v_1.mkString(",")}], [${v_2.mkString(", ")}])")
    }
 }
+////////////////////////////////////////////////////////////////////
+<cartesian()>
+
+val rdd1 = sc.parallelize( List(1, 2, 3))
+val rdd2 = sc.parallelize( List("a", "b", "c"))
+val result = rdd1.cartesian(rdd2)
+println(result.collect.mkString(", "))
 
 ```
 
