@@ -222,6 +222,42 @@ val rdd2 = sc.parallelize( List("a", "b", "c"))
 val result = rdd1.cartesian(rdd2)
 println(result.collect.mkString(", "))
 
+////////////////////////////////////////////////////////////////////
+<substract()>
+
+val rdd1 = sc.parallelize( List("a", "b", "c", "d", "e"))
+val rdd2 = sc.parallelize( List("d", "e"))
+val result = rdd1.substract(rdd2)
+println(result.collect.mkString(", "))
+
+////////////////////////////////////////////////////////////////////
+<union()>
+
+val rdd1 = sc.parallelize( List("a", "b", "c"))
+val rdd2 = sc.parallelize( List("d", "e", "f"))
+val result = rdd1.union(rdd2)
+println(result.collect.mkString(", "))
+
+
+////////////////////////////////////////////////////////////////////
+<intersection()>
+
+val rdd1 = sc.parallelize( List( "a", "a", "b", "c"))
+val rdd2 = sc.parallelize( List( "a", "a", "c", "c"))
+val result = rdd1.intersection(rdd2)
+println(result.collect.mkString(", "))
+
+////////////////////////////////////////////////////////////////////
+<join()>
+
+val rdd1 = sc.parallelize( List("a", "b", "c", "d", "e")).map(_, 1))
+val rdd2 = sc.parallelize( List("b", "c", "f")).map((_, 2))
+val result = rdd1.join(rdd2)
+println(result.collect.mkString(", "))
+
+
+////////////////////////////////////////////////////////////////////
+<>
 ```
 
 ## 3. WordCount실습
