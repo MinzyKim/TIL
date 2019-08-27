@@ -257,7 +257,45 @@ println(result.collect.mkString(", "))
 
 
 ////////////////////////////////////////////////////////////////////
-<>
+<leftOuterJoin(), rightOuterJoin()>
+
+val rdd1 = sc.parallelize( List( "a", "a", "b", "c")).map((_, 1))
+val rdd2 = sc.parallelize( List( "b", "c")).map((_, 1))
+val result1 = rdd1.leftOuterJoin(rdd2)
+val result2 = rdd1.rightOuterJoin(rdd2)
+println("Left:" + result1.collect.mkString("\t"))
+println("Right:" + result2.collect.mkString("\t"))
+
+////////////////////////////////////////////////////////////////////
+<substractByKey()>
+
+val rdd1 = sc.parallelize( List("a", "b")).map(_, 1))
+val rdd2 = sc.parallelize( List("b“ )).map((_, 2))
+val result = rdd1. substractByKey(rdd2)
+println(result.collect.mkString(“\n"))
+
+////////////////////////////////////////////////////////////////////
+<reduceByKey()>
+
+val rdd = sc.parallelize( List( "a", "b", "b")).map((_, 1))
+val result = rdd.reduceByKey(rdd)
+println(result.collect.mkString(","))
+
+////////////////////////////////////////////////////////////////////
+<foldByKey()>
+
+val rdd = sc.parallelize( List( "a", "b", "b")).map((_, 1))
+val result = rdd.foldByKey(_+_)
+println(result.collect.mkString(","))
+
+
+////////////////////////////////////////////////////////////////////
+<combineByKey()>
+
+def  reduceByKey(func: (V, V) => V) : RDD[(K, V)]
+def  foldByKey(zeroValue: V)(func: (V, V) => V) : RDD[(K, V)] 
+combineByKey[C](createCombiner:(V)=>C, mergeValue:(C, V)=>C, mergeCombiners: (C, C) => C):RDD[(K, C)]
+
 ```
 
 ## 3. WordCount실습
