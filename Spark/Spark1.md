@@ -396,3 +396,24 @@ case class Record(var amount: Long, var number: Long=1){
  println(result.collect.mkString("\n"))
 
 ```
+
+
+
+### 5. aggregateByKey() 실습
+
+```scala
+def  aggregateByKey[U](zeroValue: U)(seqOp: (U, V) => U, combOp: (U, U) => U): RDD[(K, C)]
+
+
+var data = Seq(("Math", 100L),("Eng", 80L), ("Math", 50L), ("Eng", 70L), ("Eng", 90L))
+val rdd = sc.parallelize(data)
+//초기값
+val zero = Record(0, 0)
+val mergeValue = (c:Record, v: Long) => c.add(v)
+val mergeCombiners = (c1:Record, c2:Record) => c1.add(c2)
+//병합을 위한 초기값을 전달함!!
+val result = rdd.aggregateByKey(zero)(mergeValue, mergeCombiners)
+println(result.collect.mkString(", \t"))
+
+```
+
