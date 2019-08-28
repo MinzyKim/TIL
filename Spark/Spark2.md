@@ -1,13 +1,15 @@
 # Spark2
 
-## 1. Spark란?
+## 지난시간 복습
+
+### 1. Spark란?
 
 - Hadoop환경에서 작동
 - 인메모리 기반의 대용량 데이터 고속 처리 엔진으로 범용 분산 클러스터 컴퓨팅 프레임워크
 
 
 
-## 2. Spark의 구성요소
+### 2. Spark의 구성요소
 
 - 클러스터 매니저 : Spark standalone, Yarn, Mesos
 - SparkCore 
@@ -18,7 +20,7 @@
 
 
 
-## 3. Spark에서 데이터 처리하기 추상화 된 모델 :
+### 3. Spark에서 데이터 처리하기 추상화 된 모델 :
 
 - RDD(복구 가능한 분산 데이터)
 
@@ -45,7 +47,7 @@
     - Executor라는 프로세스를 실행시킴
     - Executor는 RDD의 partition을 task단위로 실행시킴
 
-## 4. SparkApplication 작동 순서
+### 4. SparkApplication 작동 순서
 
 1. SparkContext 생성
    - Spark애플리케이션과 Spark 클러스터와의 연결을 담당하는 객체
@@ -62,7 +64,7 @@
 4. 집계, 요약 처리 - Action연산
 5. 영속화(파일로 저장할 수 있다.)
 
-## 5. Spark 장점
+### 5. Spark 장점
 
 - 메모리 기반이라 반복처리와 연속으로 이루어지는 변환처리를 고속화 (메모리 기반)
 - 딥러닝, 머신러닝등의 실행환경에 적합한 환경 제공
@@ -70,7 +72,7 @@
 
 
 
-## 6. RDD와 관련된 함수
+### 6. RDD와 관련된 함수
 
 - sc.textFile() - file로 부터 RDD 생성하는 함수
 
@@ -78,3 +80,14 @@
 
 - map, flatMap() - input으로 받아서 쪼갠 다음 연산 처리하는 함수
 - mkString() - 구분자를 넘겨 주는 함수
+
+
+
+
+
+## 오늘내용
+
+### 1. Spark SQL
+
+
+
