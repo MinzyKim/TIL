@@ -200,7 +200,7 @@ Local A, Local B, Github로 활용을 하는 경우 원격저장소 이력과 �
 
    
    
-   ## 4. 되돌리기
+   ### 4. 되돌리기
    
    1. `Staging area` 에서 unstage
    
@@ -241,3 +241,151 @@ Local A, Local B, Github로 활용을 하는 경우 원격저장소 이력과 �
       ```
    
       - 변경사항이 모두 삭제 되고, 해당 파일의 이전 커밋 상태로 변화한다!
+
+
+
+## 4. 기타
+
+### 1. `.gitignore` setting하기
+
+```bash
+# Created by https://www.gitignore.io/api/java,eclipse,java-web
+# Edit at https://www.gitignore.io/?templates=java,eclipse,java-web
+
+### Eclipse ###
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# PyDev specific (Python IDE for Eclipse)
+*.pydevproject
+
+# CDT-specific (C/C++ Development Tooling)
+.cproject
+
+# CDT- autotools
+.autotools
+
+# Java annotation processor (APT)
+.factorypath
+
+# PDT-specific (PHP Development Tools)
+.buildpath
+
+# sbteclipse plugin
+.target
+
+# Tern plugin
+.tern-project
+
+# TeXlipse plugin
+.texlipse
+
+# STS (Spring Tool Suite)
+.springBeans
+
+# Code Recommenders
+.recommenders/
+
+# Annotation Processing
+.apt_generated/
+
+# Scala IDE specific (Scala & Java development for Eclipse)
+.cache-main
+.scala_dependencies
+.worksheet
+
+### Eclipse Patch ###
+# Eclipse Core
+.project
+
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
+# Annotation Processing
+.apt_generated
+
+.sts4-cache/
+
+### Java ###
+# Compiled class file
+*.class
+
+# Log file
+*.log
+
+# BlueJ files
+*.ctxt
+
+# Mobile Tools for Java (J2ME)
+.mtj.tmp/
+
+# Package Files #
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
+hs_err_pid*
+
+### Java-Web ###
+## ignoring target file
+target/
+
+# End of https://www.gitignore.io/api/java,eclipse,java-web
+```
+
+
+
+
+
+### 2. README 관리
+
+#### 1. 알고리즘 문제 풀이
+
+##### 1. [백준알고리즘](https://www.acmicpc.net)
+
+##### 단계별 풀기
+
+- 1001 - 출력하기 링크 풀이
+  - 해시
+  - DFS - 다시보기
+  - 
+
+##### 2.[프로그래머스](https://programmers.co.kr)
+
+![net_Freamework3](../../Users/student/algorithms/assets/.net_Freamework3.PNG)
+
+
+
+### 2. 프로젝트 관리
+
+##### 기술스택
+
+- R - 
+- springMVC -
+- API -
+
+##### 데이터베이스 모델링
+
+##### 시연 화면
+
+파일 > 환경설정 > 이미지파일 > assets > 체크박스 모두
