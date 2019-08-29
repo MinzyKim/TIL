@@ -199,3 +199,45 @@ Local A, Local B, Github로 활용을 하는 경우 원격저장소 이력과 �
    ```
 
    
+   
+   ## 4. 되돌리기
+   
+   1. `Staging area` 에서 unstage
+   
+      ```bash
+      $ git status
+      On branch master
+      Your branch is ahead of 'origin/master' by 1 commit.
+        (use "git push" to publish your local commits)
+      
+      Changes to be committed:
+        (use "git reset HEAD <file>..." to unstage)
+      
+              deleted:    b.txt
+      $ git reset HEAD b.txt
+      ```
+   
+   2. commit 메시지 수정하기
+   
+      ```bash
+      $ git commit --amend
+      ```
+   
+      - 커밋 메시지를 수정하게 되면 해시값이 변경되어 이력이 변화하게 된다.
+   
+      - 따라서 원격 저장소에 push된 이력이라면 절대 변경하면 안된다!
+   
+      - 커밋을 하는 과정에서 파일을 빠뜨렸다면, 위의 명령어를 통해서 수정할 수도 있다!
+   
+        ```bash
+        $ git add omit_file.txt
+        $ git commit --amend
+        ```
+   
+   3. `working directory` 변경사항 버리기
+   
+      ```bash
+      $ git checkout -- 파일명
+      ```
+   
+      - 변경사항이 모두 삭제 되고, 해당 파일의 이전 커밋 상태로 변화한다!
