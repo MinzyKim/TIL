@@ -1,6 +1,6 @@
 # Github 3일차
 
-## 1. 수업의 흐름
+## 1. 오전 수업 흐름
 
 Desktop > web 폴더 생성
 
@@ -257,3 +257,78 @@ $ git reset --hard {커밋해시코드}
 ```bash
 $ git revert {커밋해시코드}
 ```
+
+
+
+## 2. 오후 수업 흐름
+
+### 1. 꿀팁
+
+- chrome webstore - json - json viewer
+- 오픈 api사용시 아이디와 비밀번호를 깃에 공개하면 문제가 될 수 있다!!
+  - 때문에 .env 파일 설정 후 .gitignore에 등록, 환경변수를 불러와 변수에 삽입 후 사용할 것.
+- pip install -r requirements.txt - txt파일에 적힌 pip를 모두 install해준다.
+
+### 2. 파이썬으로 실습
+
+	#### 1. 네이버 파파고 api 활용
+
+```python
+import requests
+from decouple import config
+
+# 1. 환경변수 설정
+naver_client_id = config('NAVER_CLIENT_ID')
+naver_client_secret = config('NAVER_CLIENT_SECRET')
+print(naver_client_id)
+
+# 2. URL 설정
+url = 'https://openapi.naver.com/v1/papago/n2mt'
+# 3. 헤더 및 data 설정
+headers = {
+    'X-Naver-Client-Id': naver_client_id,
+    'X-Naver-Client-Secret': naver_client_secret
+}
+data = {
+    'source':'ko',
+    'target':'en',
+    'text':'댕댕이'
+}
+# 4. 요청
+# url에 헤더와 데이터를 포함해서 POST 요청을 보내고
+# 그 결과(json)을 파싱
+response = requests.post(url, headers=headers, data=data).json()
+print(response)
+```
+
+#### 2. telegram으로 chatbot 만들어서 주기적으로 lotto번호 전송하기
+
+```python
+import requests
+import random
+from decouple import config
+
+# 0. 로또 번호 추출
+
+numbers = range(1,46) ## 반복문
+text = sorted(random.sample(numbers,6))
+#print(lotto)
+
+# 1. 토큰 값 설정
+token = config('TELEGRAM_TOKEN')
+# 2. url 설정
+# chat_id, text 요청변수 설정
+# string interpolation - 문자열 내에 변수 값 삽입(f-string)
+base_url = f'https://api.telegram.org/bot{token}'
+chat_id=712426337
+# text='안녕'
+url = f'{base_url}/sendMessage?chat_id={chat_id}&text={text}'
+
+
+# 3. 메시지 보내기
+requests.get(url)
+
+```
+
+*`github` `telegram-chatbot`레파지토리에 올려두었음
+
