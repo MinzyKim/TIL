@@ -174,3 +174,49 @@
   ```
 
   
+
+- 테이블에 동적 쿼리 발행
+
+  - 스파크 SQL CLI를 이용하여 HiveQL로 테이블에 쿼리 발행하는 방식
+
+- JDBC를 통해 spark sql 이용하기
+
+  ```scala
+  spark-sql> create table dessert_tbl_json USING org.apache.spark.sql.json
+           > OPTIONS(
+           > path '/output/dessert_json'
+           > );
+  
+  spark-sql> select name, price from dessert_tbl_json LIMIT 3;
+  초콜릿 파르페	4900
+  푸딩 파르페	5300
+  딸기 파르페	5200
+  Time taken: 1.067 seconds, Fetched 3 row(s)
+  19/09/02 20:17:28 INFO thriftserver.SparkSQLCLIDriver: Time taken: 1.067 seconds, Fetched 3 row(s)
+  ```
+
+  
+
+## 2. 스트림 데이터
+
+### 1. netcat
+
+- 넷캣(Netcat)은 TCP나 UDP 프로토콜을 사용하는 네트워크 연결에서 데이터를 읽고 쓰는 간단한 유틸리티 프로그램이다.
+- nc는 network connection에 읽거나 쓴다.
+- Network connection 에서 raw-data read, write를 할수 있는 유틸리티 프로그램으로
+  원하는 포트로 원하는 데이터를 주고받을수 있는 특징때문에 해킹에도 널리 이용되며, 컴퓨터 포렌식에 있어서 라이브시스템의 데이터를 손상없이 가져오기위해서도 사용될수 있습니다.
+
+```bash
+(nc server) master ip
+[TERM1] # nc -l 9999
+
+(nc client) slave ip
+[TERM2] # nc {master의 ip주소} 9999 (# telnet 192.168.50.133 9999)
+
+hi
+hello netcat!!!!
+
+<CTRL + D>
+```
+
+ 
