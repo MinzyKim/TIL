@@ -301,14 +301,16 @@ scala>   df3.show(false)
 
 ## 2. 회귀에 의한 매출 분석
 
-### 1. 데이터 전처리
-
 - MLlib 입력 데이터 형으로 변환하기 위해 DataFrame으로 생성
 
 ```scala
 hadoop fs -mkdir /data/sales
 hadoop fs -put weather.csv  /data/sales/
 hadoop fs -put sales.csv  /data/sales/
+
+
+1단계 : 데이터 전처리
+MLlib 입력 데이터 형으로 변환하기 위해 DataFrame으로 생성
 
 shema 정의 - case class 정의
 
@@ -384,6 +386,40 @@ val selectedDataDF = replacedSalesAndWeatherDF.select("sales", "avg_temp", "rain
 //데이터프레임을 회귀분석을 위한 Vector, LabeledPoint로 생성
  val labeledPointsRDD = selectedDataDF.map(row => LabeledPoint(row.getDouble(0),
  Vectors.dense(row.getDouble(1),row.getDouble(2),row.getDouble(3))))
+
+//데이터 특성을 표준화(평균 0, 분산1인 스케일러 사용)
+// 데이터의 표준화 (평균값을 조정하고 스케이링을 개별적으로 유효화 또는 무효화를 할 수 있다
+//val scaler = new StandardScaler(withMean = true, withStd = true).fit(labeledPointsRDD.map(x => x.features))
+
+val scaler = new StandardScaler().fit(labeledPointsRDD.map(x =>x.features))
+val scaledLabledPointsRDD = labeledPointsRDD.map(x => LabeledPoint(x.label, scaler.transform(x.features)))
+
+
+// 선형회귀 모델을 작성한다
+    val numIterations = 20
+    scaledLabledPointsRDD.cache
+    val linearRegressionModel = LinearRegressionWithSGD.train(scaledLabledPointsRDD, numIterations)
+    println("weights :" + linearRegressionModel.weights)
+
+// 알고리즘에 미지의 데이터를 적용해 예측한다
+    val targetDataVector1 = Vectors.dense(15.0,15.4,1)
+    val targetDataVector2 = Vectors.dense(20.0,0,0)
+    val targetScaledDataVector1 = scaler.transform(targetDataVector1)
+    val targetScaledDataVector2 = scaler.transform(targetDataVector2)
+    val result1 = linearRegressionModel.predict(targetScaledDataVector1)
+    val result2 = linearRegressionModel.predict(targetScaledDataVector2)
+    println("avg_tmp=15.0,rainfall=15.4,weekend=true : sales = " + result1)
+    println("avg_tmp=20.0,rainfall=0,weekend=false : sales = " + result2)
+
+// 입력 데이터를 분할하고 평가한다
+    val splitScaledLabeledPointsRDD = scaledLabledPointsRDD.randomSplit(Array(0.6, 0.4), seed = 11L)
+    val trainingScaledLabeledPointsRDD = splitScaledLabeledPointsRDD(0).cache()
+    val testScaledLabeledPointsRDD = splitScaledLabeledPointsRDD(1)
+    val linearRegressionModel2 = LinearRegressionWithSGD.train(trainingScaledLabeledPointsRDD, numIterations)
+    val scoreAndLabels = testScaledLabeledPointsRDD.map { point =>
+     val score = linearRegressionModel2.predict(point.features)
+      (score, point.label)
+    }
 
 ```
 
