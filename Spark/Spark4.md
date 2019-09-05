@@ -421,5 +421,20 @@ val scaledLabledPointsRDD = labeledPointsRDD.map(x => LabeledPoint(x.label, scal
       (score, point.label)
     }
 
+val metrics = new RegressionMetrics(scoreAndLabels)
+    println("RMSE = "+ metrics.rootMeanSquaredError)
+    // 작성한 모델을 보존한다
+linearRegressionModel.save(sc, "/output/mllib/model/") 
+
+val model2 = linearRegressionModel.load(sc, "/output/mllib/model/")
+
+import org.apache.spark.mllib.regression.LinearRegressionModel
+val model2 = LinearRegressionModel.load(sc, "/output/mllib/model/")
+
+//스파크를 실행시킨 디렉토리 경로 아래에 파일 생성
+linearRegressionModel.toPMML("model.pmml")
+
+[hadoop@master mllib]$ cat model.pmml
+
 ```
 
