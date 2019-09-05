@@ -367,5 +367,23 @@ val headerOfSalesCSVRDD = sc.parallelize(Array(salesCSVRDD.first))
 val salesCSVwithoutHeaderRDD = salesCSVRDD.subtract(headerOfSalesCSVRDD)
 val salesDF = salesCSVwithoutHeaderRDD.map(_.split(",")).map(p => Sales(p(0), p(1).trim.toDouble)).toDF()
 
+//정의된 스키마 확인
+println(weatherDF.printSchema)  
+println(salesDF.printSchema)   
+// 데이터의 전처리(날짜 기준으로 조인 후, 요일 컬럼값을 수치화하고, 요일컬럼제거후 , 수치화된 주말컬럼 추가)
+val salesAndWeatherDF = salesDF.join(weatherDF, "date")
+val isWeekend = udf((t: String) => if(t.contains("일") || t.contains("토")) 1d 
+                                       else 0d)
+val replacedSalesAndWeatherDF = salesAndWeatherDF.withColumn("weekend", isWeekend(salesAndWeatherDF("day_of_week"))).drop("day_of_week")
+
+//매출에 영향을 주는 독립변수만 추출하여 새로운 데이터 프레임 생성
+//매출에 영향을 주는 독립변수 평균기온, 일강수량, 휴일을 선택
+
+val selectedDataDF = replacedSalesAndWeatherDF.select("sales", "avg_temp", "rainfall", "weekend")
+
+//데이터프레임을 회귀분석을 위한 Vector, LabeledPoint로 생성
+ val labeledPointsRDD = selectedDataDF.map(row => LabeledPoint(row.getDouble(0),
+ Vectors.dense(row.getDouble(1),row.getDouble(2),row.getDouble(3))))
+
 ```
 
