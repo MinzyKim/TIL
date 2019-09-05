@@ -435,6 +435,36 @@ val model2 = LinearRegressionModel.load(sc, "/output/mllib/model/")
 linearRegressionModel.toPMML("model.pmml")
 
 [hadoop@master mllib]$ cat model.pmml
+```
+
+```output
+[hadoop@master mllib]$ cat model.pmml
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<PMML xmlns="http://www.dmg.org/PMML-4_2" version="4.2">
+    <Header description="linear regression">
+        <Application name="Apache Spark MLlib" version="2.4.3"/>
+        <Timestamp>2019-09-05T22:58:12</Timestamp>
+    </Header>
+    <DataDictionary numberOfFields="4">
+        <DataField name="field_0" optype="continuous" dataType="double"/>
+        <DataField name="field_1" optype="continuous" dataType="double"/>
+        <DataField name="field_2" optype="continuous" dataType="double"/>
+        <DataField name="target" optype="continuous" dataType="double"/>
+    </DataDictionary>
+    <RegressionModel modelName="linear regression" functionName="regression">
+        <MiningSchema>
+            <MiningField name="field_0" usageType="active"/>
+            <MiningField name="field_1" usageType="active"/>
+            <MiningField name="field_2" usageType="active"/>
+            <MiningField name="target" usageType="target"/>
+        </MiningSchema>
+        <RegressionTable intercept="0.0">
+            <NumericPredictor name="field_0" coefficient="199554.8706936455"/>
+            <NumericPredictor name="field_1" coefficient="30004.300595788493"/>
+            <NumericPredictor name="field_2" coefficient="158369.3623306316"/>
+        </RegressionTable>
+    </RegressionModel>
+</PMML>
 
 ```
 
