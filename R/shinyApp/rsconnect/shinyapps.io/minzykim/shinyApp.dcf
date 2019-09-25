@@ -1,0 +1,12 @@
+name: shinyApp
+title: shinyApp
+username:
+account: minzykim
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1240870
+bundleId: 2443005
+url: https://minzykim.shinyapps.io/shinyApp/
+when: 1569392605.42497
+asMultiple: FALSE
+asStatic: FALSE
