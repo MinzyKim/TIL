@@ -339,7 +339,180 @@ h1 {
 </body>
 ```
 
+![image-20191112170628333](python5.assets/image-20191112170628333.png)
+
+## 8. Utilities앱 만들기(urls 분리)
+
+- `Config/urls.py`
+
+```bash
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('util/', include('utilities.urls')),
+    path('pages/', include('pages.urls')), # pages 아래있는 urls를 모두 가져오겠다.(한번 거치기)
+    path('admin/', admin.site.urls),
+]
+```
+
+- `Pages/urls.py`
+
+```python
+from django.urls import path
+from . import views # from 현재경로에서 views 임포트하겠다.
+
+urlpatterns = [
+    path('throw/', views.throw),
+    path('catch/', views.catch),
+    path('lotto/', views.lotto),
+    path('lotto_result/', views.lotto_result),
+    path('artii/', views.artii),
+    path('artii_result/', views.artii_result),
+    path('user_new/', views.user_new),
+    path('user_create/', views.user_create),
+    path('subway_form/', views.subway_form),
+    path('subway_result/', views.subway_result),
+    path('static_ex/', views.static_ex),
+    path('index/', views.index),
+    ]
+```
+
+경로를 나눠놔서 경로설정할 때 앞쪽에 상위폴더를 붙여줘야 한다.(pages/index.html)
+
+- `Settings.py`
+
+```python
+INSTALLED_APPS = [
+    'utilities', # pages 에 같은 것을 만들어도 유틸리티가 먼저 접근되어 유틸리티 페이지가 호출된다.
+    'pages', # 이를 해결하기 위해 templates/자기이름폴더 아래에 위치시켜야 한다.
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
+]
+```
+
+- 겹치지 않기 위해!!
+
+![image-20191112172428115](python5.assets/image-20191112172428115.png)
+
+- `Utilities/urls.py`
+
+```python
+from django.urls import path
+from . import views
+
+urlpatterns=[
+    path('index/', views.index),
+    ]
+```
 
 
-## 8. Utilities앱 만들기
+
+
+
+## 9. 템플릿 상속
+
+- project name안에 base.html을 만듬	
+
+  1. Templates `settings.py` 안에
+
+     - `DIRS : [os.path.join(BASE_DIR, '프로젝트 세팅즈에 있는 폴더명', 'templates')],`
+
+     ```python
+     TEMPLATES = [
+         {
+             'BACKEND': 'django.template.backends.django.DjangoTemplates',
+             'DIRS': [os.path.join(BASE_DIR,'config','templates')], # 장고 안에 템플릿을 관리하기 위한 것  config 안에 templates.
+             'APP_DIRS': True, # 앱에 있는 템플릿을 불러올거야?
+             'OPTIONS': {
+                 'context_processors': [
+                     'django.template.context_processors.debug',
+                     'django.template.context_processors.request',
+                     'django.contrib.auth.context_processors.auth',
+                     'django.contrib.messages.context_processors.messages',
+                 ],
+             },
+         },
+     ]
+     ```
+
+     
+
+  2. 프로젝트 세팅즈 폴더명/templates/base.html 작성함
+
+     ![image-20191112171839188](python5.assets/image-20191112171839188.png)
+
+     - `{% block (블럭이름) %} {% endblock %}`을 html 파일 안 원하는 곳에 둠
+
+  3. 만들어진 base.html 상속하려면
+
+     - html 상단에 `{% extends  'base.html' %}`
+     - `{% block (블럭이름) %} 내용 기술하면 됨 {% endblock %}`
+
+  4. 예시
+
+  - `base.html`
+
+```python
+<head>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+  <title>  {% block title %}
+    {% endblock %}</title>
+    {% block static_link %}
+    {% endblock %}
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+                <a class="navbar-brand" href="/pages/static_ex/">Navbar</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNavDropdown">
+                  <ul class="navbar-nav">
+                    <li class="nav-item active">
+                      <a class="nav-link" href="/pages/index/">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/pages/artii/">Artii</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" href="/pages/subway_form/">Subway</a>
+                    </li>
+                    <li class="nav-item dropdown">
+                      <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        Dropdown link
+                      </a>
+                      <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <a class="dropdown-item" href="#">Something else here</a>
+                      </div>
+                    </li>
+                  </ul>
+                </div>
+              </nav>
+    <h1>장고 BASE HTML</h1>
+    {% block body %}
+    {% endblock %}
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+</body>
+```
+
+- `Index.html`
+
+```python
+{% extends 'base.html' %}
+{% block title %}
+INDEX
+{% endblock %}
+{% block body %}
+<h1>여기는 PAGES INDEX 입니다.</h1>
+{% endblock %}
+```
 
