@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title%}
+Subway
+{% endblock %}
+{% block body %}
+<h1>{{ username }}고객님 안녕하세요</h1>
+<h2>{{ date }}에 주문하신 건입니다.</h2>
+<p>선택한 샌드위치는 : {{ sandwich }}</p>
+<p>선택한 빵은 : {{ bread }}</p>
+<p>선택한 사이즈는 : {{ size }}</p>
+<p>선택한 야채 및 소스는 : {{ source }}</p>
+{% endblock %}

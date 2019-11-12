@@ -1,0 +1,8 @@
+<form action="/pages/user_create/" method="POST">
+    {% csrf_token %}
+    <label for="name">아이디</label>
+    <input type="text" name="name" id="name">
+    <label for="pw">패스워드</label>
+    <input type="passward" name="pw" id="pw">
+    <input type="submit">
+</form>

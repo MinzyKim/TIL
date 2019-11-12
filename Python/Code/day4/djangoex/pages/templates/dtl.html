@@ -1,0 +1,37 @@
+<!-- templates/dtl.html -->
+<h3>1. 반복문</h3>
+{% for f in foods %}
+    <p>{{ f }}</p>
+{% endfor %}
+<hr>
+{% for f in foods %}
+    <p>{{ forloop.counter }}. {{ f }}</p>
+{% endfor %}
+<hr>
+{% for user in empty_list %}
+    <p>{{ user }}</p>
+    <!-- empty : for 태그안에 아무것도 없을 때 밑에 설정된 값이 출력-->
+{% empty %}
+    <p>현재 가입한 유저가 없습니다.</p>
+{% endfor %}
+<hr>
+<h3>2. 조건문</h3>
+{% if '짜장면' in foods %}
+    <p>짜장면엔 단무지 최고!</p>
+{% endif %}
+
+<h3>7. 연산</h3>
+<p>{{ 4|add:6 }}</p>
+<hr>
+
+<h3>8. 날짜 표현</h3>
+{{ timenow }}<br>
+{% now "DATETIME_FORMAT" %}<br>
+{% now "SHORT_DATETIME_FORMAT %}<br>
+{% now "DATE_FORMAT %}<br>
+{% now "SHORT_DATE_FORMAT %}<br>
+<hr>
+{% now "Y년 m월 d일 (D) h:i" %}<br>
+
+<h3>9. 하이퍼링크</h3>
+{{ 'google.com'|urlize }}
