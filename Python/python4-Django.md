@@ -11,6 +11,7 @@
 3. 터미널(`Ctrl+~`) 창 열어서 가상환경 세팅
 
 ```bash
+virtualenv env
 source venv/bin/activate
 pip list
 ```
@@ -202,3 +203,11 @@ def birth(request):
 
 ![image-20191111171438351](/Users/minji/Library/Application Support/typora-user-images/image-20191111171438351.png)
 
+
+영화 추천 장르별 네이버 순위, 어디서 다운받을 수 있는지, 어느 사이트에서 스트리밍으로 볼 수 있는지
+
+즙, 어떤 효능 있는지
+
+영양제 정리 사이트, 어디에 뭐가 좋은지
+
+악플러 잡기 
