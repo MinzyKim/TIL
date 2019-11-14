@@ -287,4 +287,155 @@ Type "help", "copyright", "credits" or "license" for more information.
 
    
 
+   ### 11. validation체크
+
+   ```python
+   >>> board2.title = "12345678910" # maxlength=10	인데 11자를 넣어봄
+   >>> board2.full_clean()
+   Traceback (most recent call last):
+     File "<console>", line 1, in <module>
+     File "/Users/minji/Day6/env/lib/python3.7/site-packages/django/db/models/base.py", line 1203, in full_clean
+       raise ValidationError(errors)
+   django.core.exceptions.ValidationError: {'title': ['Ensure this value has at most 10 characters (it has 11).'], 'content': ['This field cannot be blank.']}
+   ```
+
+   ### 12. 실습
+
+   ```python
+   # 데이터 불러오기
+   >>> b=Board.objects.all()
+   >>> b
+   <QuerySet [<Board: 1 : >, <Board: 2 : second>, <Board: 3 : third>, <Board: 4 : fourth>]>
+   >>> b[0]
+   <Board: 1 : >
+   >>> b[0].title
+   ''
+   >>> b[1].title
+   'second'
    
+   >>> b = Board.objects.get(pk=3)
+   >>> b
+   <Board: 3 : third>
+   >>> b = Board.objects.get(title='second')
+   >>> b
+   <Board: 2 : second>
+       
+   # 값이 같은 데이터 불러오기 ( get vs filter )
+   >>> Board.objects.create(title='second', content="두번째")
+   <Board: 6 : second>
+   >>>  
+   boards.models.Board.MultipleObjectsReturned: get() returned more than one Board -- it returned 2!
+   >>> b = Board.objects.filter(title="second") # filter를 쓸 것
+   >>> b
+   <QuerySet [<Board: 2 : second>, <Board: 6 : second>]>
+   
+   # 타입 확인하기
+   >>> type(b) # list처럼 사용하면 된다!!
+   <class 'django.db.models.query.QuerySet'>
+   >>> b[1:3]
+   <QuerySet [<Board: 2 : second>, <Board: 3 : third>]>
+   >>> type(b[0])
+   <class 'boards.models.Board'>
+   
+   # 삭제와 변경
+   >>> b = Board.objects.get(pk=1)
+   >>> b
+   <Board: 1 : >
+   >>> type(b)
+   <class 'boards.models.Board'>
+   >>> b.title = "hello orm"
+   >>> b.save()
+   >>> b=Board.objects.get(pk=1)
+   >>> b
+   <Board: 1 : hello orm>
+   >>> b = Board.objects.get(pk=3)
+   >>> b
+   <Board: 3 : third>
+   >>> b.delete()
+   (1, {'boards.Board': 1})
+   >>> Board.objects.all()
+   <QuerySet [<Board: 1 : hello orm>, <Board: 2 : second>, <Board: 4 : fourth>, <Board: 5 : seconds>, <Board: 6 : second>]>
+   ```
+
+   ## 2. ORM - models.py 관리
+
+   ```python
+   from django.contrib import admin
+   from .models import Board
+   
+   # Register your models here.
+   class BoardAdmin(admin.ModelAdmin):
+       fields = ['content', 'title'] # Content랑 title 반대로 넣기
+       list_display=["title", "updated_at"] 
+       list_filter=["updated_at"]
+       search_fields = ["title", "content"]
+   
+   admin.site.register(Board, BoardAdmin)
+   ```
+
+   ![image-20191114151900816](python6.assets/image-20191114151900816.png)
+
+## 2. 꿀팁
+
+```python
+# python orm 필드 뭐있는지 알고 싶을 때
+https://docs.djangoproject.com/en/2.2/ref/models/fields/
+```
+
+
+
+## 3. 마지막 실습
+
+```
+1. 서브웨이 폼에서 받은 데이터를 DB에 넣어보기
+2. DB에서 데이터를 받아와 뿌리자
+
+	1. 서브웨이 폼에 어떤 데이터가 쩌ㅏㅇ되는지 파악
+		그 데이터를 models.py 정의 (class Subway)
+		db에 생성(migrate)
+		데이터를 받아서 저장하는 부분을 완성
+		
+	2. DB에서 데이터 전체를 불러와 페이지에 간결하게 뿌리기
+```
+
+- `views.py`
+
+```python
+def subway_result(request):
+    username=request.POST.get('name')
+    date=request.POST.get('date')
+    sandwich=request.POST.get('sandwich')
+    size=request.POST.get('size')
+    bread=request.POST.get('bread')
+    source=request.POST.getlist('source')
+
+    subway=Subway.objects.create(name=username, date=date, sandwich=sandwich, 
+                                size=size, bread=bread, source=source)
+    subway.save()
+    subway=Subway.objects.all()
+    print(subway)
+
+    context={
+       'subway':subway
+    }
+    return render(request, 'boards/subway_result.html',context)
+```
+
+- `Subway_result.py`
+
+```python
+Subway
+{% for i in subway %}
+<h1>{{ i.name }}고객님 안녕하세요</h1>
+<h2>{{ i.date }}에 주문하신 건입니다.</h2>
+<p>선택한 샌드위치는 : {{ i.sandwich }}</p>
+<p>선택한 빵은 : {{ i.bread }}</p>
+<p>선택한 사이즈는 : {{ i.size }}</p>
+<p>선택한 야채 및 소스는 : {{ i.source }}</p>
+{% endfor %}
+```
+
+![image-20191114174437761](python6.assets/image-20191114174437761.png)
+
+![image-20191114174457168](python6.assets/image-20191114174457168.png)
+
