@@ -1,0 +1,7 @@
+{% block body %}
+    제목 : {{ article.title }} <br>
+    내용 : {{ article.content}} <br>
+
+<a href="{article.id}/update/">수정하기</a>
+<a href="{article.id}/delete/">삭제하기</a>
+{% endblock %}
