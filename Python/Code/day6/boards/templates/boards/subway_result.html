@@ -1,0 +1,10 @@
+
+Subway
+{% for i in subway %}
+<h1>{{ i.name }}고객님 안녕하세요</h1>
+<h2>{{ i.date }}에 주문하신 건입니다.</h2>
+<p>선택한 샌드위치는 : {{ i.sandwich }}</p>
+<p>선택한 빵은 : {{ i.bread }}</p>
+<p>선택한 사이즈는 : {{ i.size }}</p>
+<p>선택한 야채 및 소스는 : {{ i.source }}</p>
+{% endfor %}

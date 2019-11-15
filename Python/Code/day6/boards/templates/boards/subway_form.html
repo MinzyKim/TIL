@@ -1,0 +1,45 @@
+
+<h1>FORM</h1>
+
+
+<p>주문서를 작성하여 주십시오.</p>
+<hr>
+<form action="/boards/subway_result/" method="POST">
+    {% csrf_token %}
+    <label for="name">이름</label>
+<input type="text" name="name" id="name" placeholder="이름을 입력해주세요"><br>
+<label for="date">날짜</label>
+<input type="date" name="date" id="date" placeholder="2019. 01. 03">
+<h2>1. 샌드위치 선택</h2>
+<input type="radio" name="sandwich" value="에그마요">
+<label for="sandwich">에그마요</label><br>
+<input type="radio" name="sandwich" value="이탈리안 비엠티">
+<label for="sandwich">이탈리안 비엠티</label><br>
+<input type="radio" name="sandwich" value="터키 베이컨 아보카도">
+<label for="sandwich">터키 베이컨 아보카도</label><br>
+<hr>
+<h2>2. 사이즈 선택</h2>
+<label for="size"></label>
+<input type="number" name="size" min=15 max=30 step=15>
+<hr>
+<h2>3. 빵</h2>
+<select type="dropdown" name="bread">
+        <option value="허니오트">허니오트</option>
+        <option value="플랫브레드">플랫브레드</option>
+        <option value="리티 이탈리안">리티 이탈리안</option>
+</select>
+<hr>
+<h2>4. 야채/소스</h2>
+<input type="checkbox" name="source" value="토마토">
+<label for="source">토마토</label><br>
+<input type="checkbox" name="source" value="오이">
+<label for="source">오이</label><br>
+<input type="checkbox" name="source" value="할라피뇨">
+<label for="source">할라피뇨</label><br>
+<input type="checkbox" name="source" value="핫 칠리">
+<label for="source">핫 칠리</label><br>
+<input type="checkbox" name="source" value="바베큐">
+<label for="source">바베큐</label><br>
+<br>
+<input type="submit">
+</form>
