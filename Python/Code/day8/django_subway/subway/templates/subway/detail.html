@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block body %}
+    이름 : {{ sub.name }}<br>
+    주소 : {{ sub.address }}<br>
+    번호 : {{ sub.phone }}<br>
+    메뉴 : {{ sub.menu }}<br>
+    주문 사항 :
+    {{ sub.bread }} / {{ sub.sauce }}<br>
+    {{ sub.vegetable }} / {{ sub.drink }}<br>
+
+    <a href="{% url 'subway:edit' sub.id %}">수정하기</a>
+    <a href="{% url 'subway:delete' sub.id %}">삭제하기</a>
+{% endblock %}

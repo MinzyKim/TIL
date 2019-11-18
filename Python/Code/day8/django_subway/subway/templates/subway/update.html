@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% block body %}
+<form action='{% url "subway:update" subway.id %}' method='POST'>
+    {% csrf_token %}
+    이름:  <input type="text" name="name" value="{{ subway.name }}"> <br>
+    주소: <input type="text" name="address" value="{{subway.address }}"><br>
+    번호: <input type="text" name="phone" value="{{ subway.phone }}"> <br>
+    메뉴: <select name="menu" ><br>
+        <option value="치킨데리야끼">치킨데리야끼</option>
+        <option value="서브웨이클럽">서브웨이클럽</option>
+        <option value="로티세리치킨">로티세리치킨</option>
+        <option value="이탈리안 BMT">이탈리안 BMT</option>
+        <option value="참치">참치</option>
+        <option value="햄">햄</option>
+    </select>
+    <div>
+    빵 :
+    <input type="radio" name="bread" value="위트">위트
+    <input type="radio" name="bread" value="허니오트">허니오트
+    <input type="radio" name="bread" ialue="파마산 오레가노">파마산 오레가노
+    <input type="radio" name="bread" value="플랫 브레드">플랫 브레드
+        
+</div>
+<div>
+    소스 :
+    <input type="checkbox" name="sause" value="스위트 어니언">스위트 어니언
+    <input type="checkbox" name="sause" value="허니 머스타드">허니 머스타드
+    <input type="checkbox" name="sause" value="스위트 칠리">스위트 칠리
+    <input type="checkbox" name="sause" value="사우전 아일랜드">사우전 아일랜드
+    <input type="checkbox" name="sause" value="핫칠리">핫칠리
+    <input type="checkbox" name="sause" value="올리브 오일">올리브 오일
+
+
+</div>
+<div>
+        채소 :
+        <input type="checkbox" name="vegetable" value="양파">양파
+        <input type="checkbox" name="vegetable" value="피망">피망
+        <input type="checkbox" name="vegetable" value="올리브">올리브
+        <input type="checkbox" name="vegetable" value="아보카도">아보카도
+        <input type="checkbox" name="vegetable" value="토마토">토마토
+        <input type="checkbox" name="vegetable" value="피클">피클
+    
+    
+    </div>
+<div>
+    <input type="radio" name="drink" value="사이다">사이다
+    <input type="radio" name="drink" value="콜라">콜라
+    <input type="radio" name="drink" value="환타">환타
+    
+
+</div>
+    <input type='submit'>
+</form>
+{% endblock %}

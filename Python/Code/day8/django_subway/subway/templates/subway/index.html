@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block body %}
+
+<h1>index page</h1>
+<ul>
+{% for sub in subways %}
+<li><a href="{% url 'subway:detail' sub.id %}">{{ sub.name }} : {{ sub.menu }}_{{ sub.updated_at }}</a></li>
+{% empty %}
+<h1>주문 내역이 없습니다.</h1>
+{% endfor %}
+
+</ul>
+{% endblock %}
