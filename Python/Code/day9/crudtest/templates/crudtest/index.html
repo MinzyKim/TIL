@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block body %}
+<h1>질문 LIST</h1>
+<hr>
+<ul>
+{% for i in questions %}
+<li><a href="{% url 'crudtest:detail' i.id %}">{{ i.title }}</a></li>
+{% empty %}
+<h3>질문 등록이 필요해요.</h3>
+{% endfor %}
+</ul>
+{% endblock %}

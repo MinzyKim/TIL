@@ -421,7 +421,7 @@ def subway_result(request):
     return render(request, 'boards/subway_result.html',context)
 ```
 
-- `Subway_result.py`
+- `Subway_result.html`
 
 ```python
 Subway

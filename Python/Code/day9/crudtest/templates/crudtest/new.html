@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block body %}
+    <form action='{% url "crudtest:new" %}' method='POST'>
+        {% csrf_token %}
+       질문 : <input type="text" name="title"><br>
+       <br>
+        <input type='submit' value="등록하기">
+    </form>
+{% endblock %}

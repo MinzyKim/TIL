@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block body %}
+    <form action='' method='POST'>
+        {% csrf_token %}
+        <input type="text" name="survey" value="{{ survey.survey }}">
+        <input type='submit' value="수정하기">
+    </form>
+    <form action='' method='POST'>
+        {% csrf_token %}
+        
+        <input type='submit' value="삭제하기">
+    </form>
+{% endblock %}

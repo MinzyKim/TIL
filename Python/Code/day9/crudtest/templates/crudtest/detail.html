@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block body %}
+제목 : {{ ques.title }} <br>
+
+<a href="{% url 'crudtest:update' ques.id %}">수정하기</a>
+<form action="{% url 'crudtest:delete' ques.id %}" method='POST'>
+    {% csrf_token %}
+    <input type='submit' value="삭제하기">
+</form>
+<hr><br>
+<ol>
+{% for sur in surveys %}
+<li>{{ sur.survey }}</li>
+<a href="{% url 'survey:survey_edit' sur.id %}">수정하기</a>
+{% empty %}
+<h2>등록해주세요.</h2>
+{% endfor %}
+</ol>
+
+<hr><br>
+<form action='{% url "survey:survey" question.id %}' method='POST'>
+    {% csrf_token %}
+    질문등록 : <input type="text" name="survey">
+    <input type='submit'>
+</form>
+{% endblock %}

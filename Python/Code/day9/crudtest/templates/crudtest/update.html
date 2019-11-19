@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block body %}
+    <form action='{% url "crudtest:update" ques.id %}' method='POST'>
+        {% csrf_token %}
+       타이틀: <input type="text" name="title" value='{{ ques.title }}'><br>
+        <input type='submit'>
+    </form>
+{% endblock %}
