@@ -7,10 +7,10 @@
   - create/submit/ 했을때 저장
 - Read
   - index에서 모든 글 리스트를 보여주고
-  - 해당 글 리스트에서 제목을 클릭하면 자세한 정보를 보여줌(detal)
+  - 해당 글 리스트에서 제목을 클릭하면 자세한 정보를 보여줌(Detail)
 - Update
-  - detail페이지에서 수정하기 버튼으로 접근
-  - form에서 해당 article정보를 채워둔채로 보여주기
+  - Detail페이지에서 수정하기 버튼으로 접근
+  - form에서 해당 article정보를 채워둔 채로 보여주기
   - 수정하면 detail 페이지로 돌아가 수정한 결과를 보여줌
 - Delete
   - Detail 페이지에서 삭제하기 버튼으로 접근
