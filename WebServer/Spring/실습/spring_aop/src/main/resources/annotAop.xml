@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.3.xsd">
+
+<context:annotation-config/>
+<context:component-scan base-package="lab.spring.aop"/>
+<aop:aspectj-autoproxy/>
+
+<bean id="dbUtil"
+		class="lab.spring.aop.util.JdbcUtil"
+		p:driver="oracle.jdbc.OracleDriver"
+		p:url="jdbc:oracle:thin:@localhost:1521:orcl"
+		p:user="hr2"
+		p:pwd="oracle" />
+		
+
+</beans>

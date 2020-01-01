@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.3.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<context:annotation-config/>
+<context:component-scan base-package="lab.spring.web"/>
+	<!-- HandlerMapping Bean 설정(DefaultAnnotationHandlerMapping 사용할거임) -->
+	
+<!-- ViewResolver Bean 설정 -->
+<beans:bean id="viewResolver"
+      class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+    <beans:property name="prefix" value="/WEB-INF/view/"/>
+    <beans:property name="suffix" value=".jsp"/>
+</beans:bean>
+
+<!-- sqlSessionFactory 빈에 주입될 DataSource빈 설정 -->
+	<jee:jndi-lookup id="dataSource" jndi-name="jdbc/oracle"
+						resource-ref="true"/>
+
+	<beans:bean id="sqlSessionFactory"
+		class="org.mybatis.spring.SqlSessionFactoryBean">
+		<beans:property name="dataSource" ref="dataSource" />
+		<beans:property name="mapperLocations"
+			value="classpath*:lab/mybatis/mappers/*.xml" />
+	</beans:bean>
+
+	<beans:bean id="sqlSession"
+		class="org.mybatis.spring.SqlSessionTemplate">
+		<beans:constructor-arg index="0" ref="sqlSessionFactory" />
+	</beans:bean>
+
+<mvc:annotation-driven>
+<mvc:message-converters>
+<beans:bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
+</mvc:message-converters>
+<!-- Controller Bean 설정(annotation 기반으로 할거임) -->
+</mvc:annotation-driven>
+
+
+<beans:bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<beans:property name="basenames">
+		<beans:value>messages.validation</beans:value>
+		</beans:property>
+		</beans:bean>
+		
+		
+		<mvc:interceptors>
+		<mvc:interceptor>
+		<mvc:mapping path="/list.do"/>
+		<beans:bean id="authCheckInerceptor"
+					class="lab.spring.web.interceptor.AuthoCheckInterceptor"/>
+		</mvc:interceptor>
+		</mvc:interceptors>
+</beans:beans>
