@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+<scipt src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCl2nYY6A6_s_xMApg41i-X5rsPcawMDmY&callback=initMap"
+  type="text/javascript"></scipt>
+  <script>
+  var mapProp={center:myCenter,
+		  		Zoom:5,
+		  			mapTypeId:google.maps.MapTypeId.ROADMAP
+		  			};
+  
+  var map=new google.mpas.Map(document.getElementById("googleMap"),)mapProp);
+  var marker=new google.maps.Marker({
+	  								position:myCenter,
+	  								animationLgoogle.maps.Animation.BOUNCE
+	  								});
+  				marker.setMap(map);
+  }			
+  </script>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+</head>
+<body onload="myMap()">
+<div id="googleMap" sytle="width:500px;height:380px;"></div>
+</body>
+</html>

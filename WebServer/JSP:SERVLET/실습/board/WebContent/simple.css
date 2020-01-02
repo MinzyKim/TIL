@@ -1,0 +1,23 @@
+﻿h1, h2, h3 {
+	text-align: center
+}
+/*
+a:hover {
+	background:#C3D3E2;
+}
+*/
+#header {
+	background-image:url(image/bgWood.jpg);
+    text-align: center;
+	font-weight: bolder;
+}
+#menu {
+	border : 1px #ececec dotted
+}
+#main {
+	padding-top : 10px;
+	border-top : 1px #AAA solid	
+}
+.blank {
+	display: none;
+}

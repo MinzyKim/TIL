@@ -1,0 +1,130 @@
+﻿body { 
+	margin-top: 0;
+	margin-bottom: 0;
+	margin-left: 0;
+	margin-right: 0;
+	padding-left: 0;
+	padding-right: 0;
+	background-color:#ececec;
+}
+
+.center {
+	text-align: center
+}
+
+.line {
+	font-size : x-small;
+	font-family: 굴림, arial, "lucida console", sans-serif;
+	text-align : center;
+}
+/*
+a { 
+	text-decoration:none;
+	color:#C9CA6D;
+}
+
+a:hover {
+	color:#757678;
+	text-decoration:underline;
+}
+*/
+#header {
+	margin: 5px;
+	padding: 5px;
+	height: 200px;
+	background-image: url('image/back.jpg');
+	text-align: center;
+	font-weight: bolder;
+}
+
+#menu {
+	position: absolute;
+	left: 5px;
+	top: 220px;
+	width: 100px;  	
+	padding-left: 5;
+	padding-right: 5;
+	background:#fff;
+	border-right:1px #ececec solid;
+	border-left:1px #ececec solid;	
+}
+
+#menucontainer {
+	border-right:1px #ececec solid;
+	border-left:1px #ececec solid;
+}
+
+#menu a {
+	display:block;
+	text-decoration:none;
+	color:#87ACBB;
+	padding-left:5px;
+	width:100px;
+	background:#fff;
+}
+
+#menu a:hover {
+	color:#fff;
+	background:#C3D3E2;
+}
+
+#menu h3 {
+	display:block;
+	width:100px;
+	color: #fff;
+	background:#A26B6B;
+	border-right:3px solid #A26B6B;
+	font-weight: bolder;	
+}
+
+#main {
+	top: 0;
+	padding: 5px;
+	height: 100%;
+	margin-left: 125px;
+	margin-right: 5px;
+	background:#fff ;
+	border:1px #bcbcbc solid;
+}
+
+#shabottom {
+	float:right;
+	background:transparent url(image/shabottom.gif) bottom no-repeat;
+	margin:auto;
+	padding:0;
+	height:5px;
+	width:100px;
+	font:1px/5px "Georgia",serif;
+}
+
+#shatop {
+	background:transparent url(image/shatop.gif) top no-repeat;
+	margin:0;
+	padding:0;
+	width:100px;
+	height:5px;
+	font:1px/5px "Georgia",serif;
+	float:right;
+}
+
+.blank {
+	clear:both;
+	float:none;
+	font-size:10px;
+	color:#FFF;
+}
+
+.button {
+	width: 100px;
+	text-align:center;
+	text-decoration:none;
+	padding-top: 2;
+	padding-bottom: 2;
+	padding-left: 5;
+	padding-right: 5;
+	background: #ececec;
+	border-top:1px #ececec solid;
+	border-bottom:1px #acacac solid;
+	border-right:1px #acacac solid;
+	border-left:1px #ececec solid;	
+}
